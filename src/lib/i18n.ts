@@ -194,12 +194,15 @@ const resources = {
   },
 };
 
+i18n.use(initReactI18next);
+
 if (!i18n.isInitialized) {
-  i18n.use(initReactI18next).init({
+  i18n.init({
     resources,
     lng: "ar",
     fallbackLng: "ar",
     interpolation: { escapeValue: false },
+    react: { useSuspense: false },
   });
 }
 
