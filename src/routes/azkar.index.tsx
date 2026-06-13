@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Sun, Moon, BedDouble, Sunrise, Sparkles, Plane, Utensils, ChevronLeft } from "lucide-react";
+import {
+  Sun, Moon, BedDouble, Sunrise, Sparkles, Plane, Utensils,
+  Heart, Shield, Building2, Search, ChevronLeft,
+} from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AZKAR, CATEGORY_ORDER } from "@/lib/azkar-data";
 
@@ -8,15 +11,18 @@ export const Route = createFileRoute("/azkar/")({
   component: AzkarIndex,
 });
 
-const ICONS = { Sun, Moon, BedDouble, Sunrise, Sparkles, Plane, Utensils };
+const ICONS = { Sun, Moon, BedDouble, Sunrise, Sparkles, Plane, Utensils, Heart, Shield, Building2 };
 const TINTS: Record<string, string> = {
   morning: "bg-amber-100/70 text-amber-700",
   evening: "bg-indigo-100/70 text-indigo-700",
   sleep: "bg-violet-100/70 text-violet-700",
   wakeup: "bg-rose-100/70 text-rose-700",
   prayer: "bg-sky-100/80 text-sky-700",
-  travel: "bg-emerald-100/70 text-emerald-700",
-  food: "bg-teal-100/70 text-teal-700",
+  istighfar: "bg-pink-100/70 text-pink-700",
+  ruqyah: "bg-emerald-100/70 text-emerald-700",
+  mosque: "bg-blue-100/70 text-blue-700",
+  travel: "bg-teal-100/70 text-teal-700",
+  food: "bg-orange-100/70 text-orange-700",
 };
 
 function AzkarIndex() {
@@ -30,6 +36,14 @@ function AzkarIndex() {
           </h1>
           <p className="text-sm text-muted-foreground mt-1">{t("tagline")}</p>
         </header>
+
+        <Link
+          to="/search"
+          className="glass-card flex items-center gap-3 rounded-full px-5 py-3.5 ring-1 ring-black/5 text-muted-foreground active:scale-[0.99] transition"
+        >
+          <Search className="size-4" />
+          <span className="text-sm">{t("search.placeholder")}</span>
+        </Link>
 
         <div className="space-y-3">
           {CATEGORY_ORDER.map((cid) => {
