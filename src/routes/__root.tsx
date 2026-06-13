@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { useAppStore } from "../lib/store";
 import { useTranslation } from "react-i18next";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -137,6 +138,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LangSync />
       <Outlet />
+      <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );
 }

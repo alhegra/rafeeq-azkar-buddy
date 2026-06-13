@@ -9,38 +9,148 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TasbeehRouteImport } from './routes/tasbeeh'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as QiblaRouteImport } from './routes/qibla'
+import { Route as PrayerTimesRouteImport } from './routes/prayer-times'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AzkarIndexRouteImport } from './routes/azkar.index'
+import { Route as AzkarCategoryRouteImport } from './routes/azkar.$category'
 
+const TasbeehRoute = TasbeehRouteImport.update({
+  id: '/tasbeeh',
+  path: '/tasbeeh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QiblaRoute = QiblaRouteImport.update({
+  id: '/qibla',
+  path: '/qibla',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrayerTimesRoute = PrayerTimesRouteImport.update({
+  id: '/prayer-times',
+  path: '/prayer-times',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AzkarIndexRoute = AzkarIndexRouteImport.update({
+  id: '/azkar/',
+  path: '/azkar/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AzkarCategoryRoute = AzkarCategoryRouteImport.update({
+  id: '/azkar/$category',
+  path: '/azkar/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/prayer-times': typeof PrayerTimesRoute
+  '/qibla': typeof QiblaRoute
+  '/settings': typeof SettingsRoute
+  '/tasbeeh': typeof TasbeehRoute
+  '/azkar/$category': typeof AzkarCategoryRoute
+  '/azkar/': typeof AzkarIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/prayer-times': typeof PrayerTimesRoute
+  '/qibla': typeof QiblaRoute
+  '/settings': typeof SettingsRoute
+  '/tasbeeh': typeof TasbeehRoute
+  '/azkar/$category': typeof AzkarCategoryRoute
+  '/azkar': typeof AzkarIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/prayer-times': typeof PrayerTimesRoute
+  '/qibla': typeof QiblaRoute
+  '/settings': typeof SettingsRoute
+  '/tasbeeh': typeof TasbeehRoute
+  '/azkar/$category': typeof AzkarCategoryRoute
+  '/azkar/': typeof AzkarIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/prayer-times'
+    | '/qibla'
+    | '/settings'
+    | '/tasbeeh'
+    | '/azkar/$category'
+    | '/azkar/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/prayer-times'
+    | '/qibla'
+    | '/settings'
+    | '/tasbeeh'
+    | '/azkar/$category'
+    | '/azkar'
+  id:
+    | '__root__'
+    | '/'
+    | '/prayer-times'
+    | '/qibla'
+    | '/settings'
+    | '/tasbeeh'
+    | '/azkar/$category'
+    | '/azkar/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PrayerTimesRoute: typeof PrayerTimesRoute
+  QiblaRoute: typeof QiblaRoute
+  SettingsRoute: typeof SettingsRoute
+  TasbeehRoute: typeof TasbeehRoute
+  AzkarCategoryRoute: typeof AzkarCategoryRoute
+  AzkarIndexRoute: typeof AzkarIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tasbeeh': {
+      id: '/tasbeeh'
+      path: '/tasbeeh'
+      fullPath: '/tasbeeh'
+      preLoaderRoute: typeof TasbeehRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qibla': {
+      id: '/qibla'
+      path: '/qibla'
+      fullPath: '/qibla'
+      preLoaderRoute: typeof QiblaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prayer-times': {
+      id: '/prayer-times'
+      path: '/prayer-times'
+      fullPath: '/prayer-times'
+      preLoaderRoute: typeof PrayerTimesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +158,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/azkar/': {
+      id: '/azkar/'
+      path: '/azkar'
+      fullPath: '/azkar/'
+      preLoaderRoute: typeof AzkarIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/azkar/$category': {
+      id: '/azkar/$category'
+      path: '/azkar/$category'
+      fullPath: '/azkar/$category'
+      preLoaderRoute: typeof AzkarCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PrayerTimesRoute: PrayerTimesRoute,
+  QiblaRoute: QiblaRoute,
+  SettingsRoute: SettingsRoute,
+  TasbeehRoute: TasbeehRoute,
+  AzkarCategoryRoute: AzkarCategoryRoute,
+  AzkarIndexRoute: AzkarIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
