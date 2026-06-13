@@ -203,7 +203,6 @@ if (!i18n.isInitialized) {
     fallbackLng: "ar",
     interpolation: { escapeValue: false },
     react: { useSuspense: false },
-    initImmediate: false,
   });
 }
 
