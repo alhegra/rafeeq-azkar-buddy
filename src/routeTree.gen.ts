@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TasbeehRouteImport } from './routes/tasbeeh'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as QiblaRouteImport } from './routes/qibla'
 import { Route as PrayerTimesRouteImport } from './routes/prayer-times'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +26,11 @@ const TasbeehRoute = TasbeehRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QiblaRoute = QiblaRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
+  '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/tasbeeh': typeof TasbeehRoute
   '/azkar/$category': typeof AzkarCategoryRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
+  '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/tasbeeh': typeof TasbeehRoute
   '/azkar/$category': typeof AzkarCategoryRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
+  '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/tasbeeh': typeof TasbeehRoute
   '/azkar/$category': typeof AzkarCategoryRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/prayer-times'
     | '/qibla'
+    | '/search'
     | '/settings'
     | '/tasbeeh'
     | '/azkar/$category'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/prayer-times'
     | '/qibla'
+    | '/search'
     | '/settings'
     | '/tasbeeh'
     | '/azkar/$category'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/prayer-times'
     | '/qibla'
+    | '/search'
     | '/settings'
     | '/tasbeeh'
     | '/azkar/$category'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrayerTimesRoute: typeof PrayerTimesRoute
   QiblaRoute: typeof QiblaRoute
+  SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   TasbeehRoute: typeof TasbeehRoute
   AzkarCategoryRoute: typeof AzkarCategoryRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qibla': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrayerTimesRoute: PrayerTimesRoute,
   QiblaRoute: QiblaRoute,
+  SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   TasbeehRoute: TasbeehRoute,
   AzkarCategoryRoute: AzkarCategoryRoute,

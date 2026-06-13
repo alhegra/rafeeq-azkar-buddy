@@ -19,64 +19,136 @@ export const AZKAR: Record<string, AzkarCategory> = {
     azkar: [
       {
         id: "m1",
-        text: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-        translation: {
-          en: "We have entered the morning and the dominion belongs to Allah. Praise be to Allah. None has the right to be worshipped except Allah, alone with no partner.",
-        },
+        text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ، لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ، مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ، وَلَا يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+        translation: { en: "Ayat al-Kursi — Allah, there is no deity except Him, the Ever-Living, the Sustainer of existence..." },
+        count: 1,
+        reference: "البقرة 255",
+      },
+      {
+        id: "m2",
+        text: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ",
+        translation: { en: "We have entered the morning and the dominion belongs to Allah..." },
         count: 1,
         reference: "مسلم",
       },
       {
-        id: "m2",
+        id: "m3",
         text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
-        translation: {
-          en: "O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection.",
-        },
+        translation: { en: "O Allah, by You we enter the morning..." },
         count: 1,
         reference: "الترمذي",
       },
       {
-        id: "m3",
+        id: "m4",
+        text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+        translation: { en: "Sayyid al-Istighfar — Master of seeking forgiveness." },
+        count: 1,
+        reference: "البخاري",
+      },
+      {
+        id: "m5",
+        text: "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+        translation: { en: "O Allah, I have entered the morning calling You to witness..." },
+        count: 4,
+        reference: "أبو داود",
+      },
+      {
+        id: "m6",
+        text: "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ، فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+        translation: { en: "O Allah, every blessing I or any of Your creation enjoy is from You alone." },
+        count: 1,
+        reference: "أبو داود",
+      },
+      {
+        id: "m7",
+        text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ",
+        translation: { en: "O Allah, grant me well-being in my body..." },
+        count: 3,
+        reference: "أبو داود",
+      },
+      {
+        id: "m8",
+        text: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+        translation: { en: "Allah is sufficient for me..." },
+        count: 7,
+        reference: "أبو داود",
+      },
+      {
+        id: "m9",
+        text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي",
+        translation: { en: "O Allah, I ask You for pardon and well-being in this life and the next..." },
+        count: 1,
+        reference: "أبو داود",
+      },
+      {
+        id: "m10",
+        text: "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ",
+        translation: { en: "O Allah, Knower of the unseen and seen..." },
+        count: 1,
+        reference: "الترمذي",
+      },
+      {
+        id: "m11",
+        text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+        translation: { en: "In the name of Allah, with whose name nothing is harmed..." },
+        count: 3,
+        reference: "أبو داود والترمذي",
+      },
+      {
+        id: "m12",
+        text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+        translation: { en: "I am pleased with Allah as my Lord, Islam as my religion..." },
+        count: 3,
+        reference: "أبو داود والترمذي",
+      },
+      {
+        id: "m13",
+        text: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+        translation: { en: "O Ever-Living, O Sustainer, in Your mercy I seek relief..." },
+        count: 3,
+        reference: "النسائي والحاكم",
+      },
+      {
+        id: "m14",
+        text: "أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+        translation: { en: "We have entered the morning upon the natural way of Islam..." },
+        count: 1,
+        reference: "أحمد",
+      },
+      {
+        id: "m15",
         text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
         translation: { en: "Glory and praise be to Allah." },
         count: 100,
         reference: "البخاري ومسلم",
       },
       {
-        id: "m4",
-        text: "لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-        translation: {
-          en: "There is no god but Allah alone, with no partner. His is the dominion and praise, and He is over all things capable.",
-        },
+        id: "m16",
+        text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+        translation: { en: "There is no god but Allah alone..." },
         count: 10,
         reference: "النسائي",
       },
       {
-        id: "m5",
-        text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-        translation: {
-          en: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
-        },
+        id: "m17",
+        text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+        translation: { en: "Glory and praise to Allah by the number of His creation..." },
         count: 3,
         reference: "مسلم",
       },
       {
-        id: "m6",
-        text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ",
-        translation: {
-          en: "O Allah, grant my body health, my hearing health, my sight health. There is no god but You.",
-        },
-        count: 3,
-        reference: "أبو داود",
+        id: "m18",
+        text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+        translation: { en: "I seek the forgiveness of Allah and turn to Him in repentance." },
+        count: 100,
+        reference: "البخاري ومسلم",
       },
       {
-        id: "m7",
-        text: "حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
-        translation: {
-          en: "Allah is sufficient for me; there is no god but Him. Upon Him I rely, and He is the Lord of the great throne.",
-        },
-        count: 7,
-        reference: "أبو داود",
+        id: "m19",
+        text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+        translation: { en: "O Allah, send prayers and peace upon our Prophet Muhammad." },
+        count: 10,
+        reference: "الطبراني",
       },
     ],
   },
@@ -86,55 +158,122 @@ export const AZKAR: Record<string, AzkarCategory> = {
     azkar: [
       {
         id: "e1",
-        text: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ",
-        translation: {
-          en: "We have entered the evening and the dominion belongs to Allah. Praise be to Allah.",
-        },
+        text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...",
+        translation: { en: "Ayat al-Kursi" },
+        count: 1,
+        reference: "البقرة 255",
+      },
+      {
+        id: "e2",
+        text: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا",
+        translation: { en: "We have entered the evening..." },
         count: 1,
         reference: "مسلم",
       },
       {
-        id: "e2",
+        id: "e3",
         text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
-        translation: {
-          en: "O Allah, by You we enter the evening, and by You we enter the morning.",
-        },
+        translation: { en: "O Allah, by You we enter the evening..." },
         count: 1,
         reference: "الترمذي",
       },
       {
-        id: "e3",
-        text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-        translation: {
-          en: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
-        },
-        count: 3,
-        reference: "مسلم",
-      },
-      {
         id: "e4",
-        text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ",
-        translation: {
-          en: "O Allah, I ask You for well-being in this world and the Hereafter.",
-        },
+        text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+        translation: { en: "Sayyid al-Istighfar." },
         count: 1,
-        reference: "أبو داود",
+        reference: "البخاري",
       },
       {
         id: "e5",
-        text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
-        translation: {
-          en: "Glory and praise to Allah, by the number of His creation, the pleasure of Himself, the weight of His throne, and the ink of His words.",
-        },
+        text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+        translation: { en: "I seek refuge in the perfect words of Allah..." },
         count: 3,
         reference: "مسلم",
       },
       {
         id: "e6",
-        text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ",
-        translation: { en: "O Allah, You are my Lord, none has the right to be worshipped but You." },
+        text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+        translation: { en: "In the name of Allah..." },
+        count: 3,
+        reference: "أبو داود والترمذي",
+      },
+      {
+        id: "e7",
+        text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+        translation: { en: "I am pleased..." },
+        count: 3,
+        reference: "أبو داود",
+      },
+      {
+        id: "e8",
+        text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ",
+        translation: { en: "O Allah, grant me well-being..." },
+        count: 3,
+        reference: "أبو داود",
+      },
+      {
+        id: "e9",
+        text: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+        translation: { en: "Allah is sufficient for me..." },
+        count: 7,
+        reference: "أبو داود",
+      },
+      {
+        id: "e10",
+        text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي",
+        translation: { en: "..." },
         count: 1,
+        reference: "ابن ماجه",
+      },
+      {
+        id: "e11",
+        text: "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+        translation: { en: "..." },
+        count: 4,
+        reference: "أبو داود",
+      },
+      {
+        id: "e12",
+        text: "أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا",
+        translation: { en: "..." },
+        count: 1,
+        reference: "أحمد",
+      },
+      {
+        id: "e13",
+        text: "اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ، فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+        translation: { en: "..." },
+        count: 1,
+        reference: "أبو داود",
+      },
+      {
+        id: "e14",
+        text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+        translation: { en: "Glory and praise be to Allah." },
+        count: 100,
+        reference: "مسلم",
+      },
+      {
+        id: "e15",
+        text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ، مِنْ غَضَبِهِ وَعِقَابِهِ، وَشَرِّ عِبَادِهِ، وَمِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَنْ يَحْضُرُونِ",
+        translation: { en: "..." },
+        count: 3,
+        reference: "أبو داود",
+      },
+      {
+        id: "e16",
+        text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+        translation: { en: "..." },
+        count: 100,
         reference: "البخاري",
+      },
+      {
+        id: "e17",
+        text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+        translation: { en: "..." },
+        count: 10,
+        reference: "الطبراني",
       },
     ],
   },
@@ -152,23 +291,51 @@ export const AZKAR: Record<string, AzkarCategory> = {
       {
         id: "s2",
         text: "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
-        translation: { en: "O Allah, protect me from Your punishment on the Day You resurrect Your servants." },
+        translation: { en: "..." },
         count: 3,
         reference: "الترمذي",
       },
       {
         id: "s3",
         text: "سُبْحَانَ اللَّهِ (33) وَالْحَمْدُ لِلَّهِ (33) وَاللَّهُ أَكْبَرُ (34)",
-        translation: { en: "Glory be to Allah (33), praise be to Allah (33), Allah is the greatest (34)." },
+        translation: { en: "..." },
         count: 1,
         reference: "البخاري ومسلم",
       },
       {
         id: "s4",
         text: "اللَّهُمَّ بِاسْمِكَ وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ",
-        translation: { en: "O Allah, in Your name I lay down, and in Your name I rise..." },
+        translation: { en: "..." },
         count: 1,
         reference: "البخاري ومسلم",
+      },
+      {
+        id: "s5",
+        text: "اللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَغْبَةً وَرَهْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ، وَبِنَبِيِّكَ الَّذِي أَرْسَلْتَ",
+        translation: { en: "..." },
+        count: 1,
+        reference: "البخاري ومسلم",
+      },
+      {
+        id: "s6",
+        text: "قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+        translation: { en: "Surah Al-Ikhlas." },
+        count: 3,
+        reference: "البخاري",
+      },
+      {
+        id: "s7",
+        text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِنْ شَرِّ مَا خَلَقَ، وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+        translation: { en: "Surah Al-Falaq." },
+        count: 3,
+        reference: "البخاري",
+      },
+      {
+        id: "s8",
+        text: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَهِ النَّاسِ، مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ",
+        translation: { en: "Surah An-Nas." },
+        count: 3,
+        reference: "البخاري",
       },
     ],
   },
@@ -179,16 +346,23 @@ export const AZKAR: Record<string, AzkarCategory> = {
       {
         id: "w1",
         text: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
-        translation: { en: "Praise be to Allah who gave us life after death, and to Him is the resurrection." },
+        translation: { en: "Praise be to Allah who gave us life after death..." },
         count: 1,
         reference: "البخاري",
       },
       {
         id: "w2",
-        text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
-        translation: { en: "There is no god but Allah alone, with no partner." },
+        text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
+        translation: { en: "..." },
         count: 1,
         reference: "البخاري",
+      },
+      {
+        id: "w3",
+        text: "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي فِي جَسَدِي، وَرَدَّ عَلَيَّ رُوحِي، وَأَذِنَ لِي بِذِكْرِهِ",
+        translation: { en: "..." },
+        count: 1,
+        reference: "الترمذي",
       },
     ],
   },
@@ -196,39 +370,122 @@ export const AZKAR: Record<string, AzkarCategory> = {
     id: "prayer",
     icon: "Sparkles",
     azkar: [
-      {
-        id: "p1",
-        text: "أَسْتَغْفِرُ اللَّهَ",
-        translation: { en: "I seek forgiveness from Allah." },
-        count: 3,
-        reference: "مسلم",
-      },
+      { id: "p1", text: "أَسْتَغْفِرُ اللَّهَ", count: 3, reference: "مسلم" },
       {
         id: "p2",
         text: "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
-        translation: { en: "O Allah, You are peace and from You is peace. Blessed are You, O Owner of majesty and honor." },
         count: 1,
         reference: "مسلم",
       },
       {
         id: "p3",
-        text: "سُبْحَانَ اللَّهِ",
-        translation: { en: "Glory be to Allah." },
-        count: 33,
+        text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
+        count: 1,
+        reference: "البخاري ومسلم",
+      },
+      { id: "p4", text: "سُبْحَانَ اللَّهِ", count: 33, reference: "مسلم" },
+      { id: "p5", text: "الْحَمْدُ لِلَّهِ", count: 33, reference: "مسلم" },
+      { id: "p6", text: "اللَّهُ أَكْبَرُ", count: 34, reference: "مسلم" },
+      {
+        id: "p7",
+        text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+        count: 1,
+        reference: "تتمة المئة بعد التسبيح",
+      },
+      {
+        id: "p8",
+        text: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+        count: 1,
+        reference: "أبو داود",
+      },
+      {
+        id: "p9",
+        text: "آيَةُ الْكُرْسِيِّ — اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...",
+        count: 1,
+        reference: "النسائي",
+      },
+    ],
+  },
+  istighfar: {
+    id: "istighfar",
+    icon: "Heart",
+    azkar: [
+      {
+        id: "i1",
+        text: "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ",
+        count: 3,
+        reference: "أبو داود والترمذي",
+      },
+      {
+        id: "i2",
+        text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ... (سَيِّدُ الِاسْتِغْفَارِ)",
+        count: 1,
+        reference: "البخاري",
+      },
+      {
+        id: "i3",
+        text: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
+        count: 100,
+        reference: "أبو داود",
+      },
+      {
+        id: "i4",
+        text: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+        count: 1,
+        reference: "الأنبياء 87",
+      },
+    ],
+  },
+  ruqyah: {
+    id: "ruqyah",
+    icon: "Shield",
+    azkar: [
+      {
+        id: "r1",
+        text: "بِسْمِ اللَّهِ أَرْقِيكَ، مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ، مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنِ حَاسِدٍ، اللَّهُ يَشْفِيكَ، بِسْمِ اللَّهِ أَرْقِيكَ",
+        count: 3,
         reference: "مسلم",
       },
       {
-        id: "p4",
-        text: "الْحَمْدُ لِلَّهِ",
-        translation: { en: "Praise be to Allah." },
-        count: 33,
+        id: "r2",
+        text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ",
+        count: 3,
+        reference: "البخاري",
+      },
+      {
+        id: "r3",
+        text: "اللَّهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَأْسَ، اشْفِ أَنْتَ الشَّافِي، لَا شِفَاءَ إِلَّا شِفَاؤُكَ، شِفَاءً لَا يُغَادِرُ سَقَمًا",
+        count: 1,
+        reference: "البخاري ومسلم",
+      },
+      {
+        id: "r4",
+        text: "الْفَاتِحَةُ — الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...",
+        count: 7,
+        reference: "البخاري",
+      },
+    ],
+  },
+  mosque: {
+    id: "mosque",
+    icon: "Building2",
+    azkar: [
+      {
+        id: "mo1",
+        text: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ (عند الدخول)",
+        count: 1,
         reference: "مسلم",
       },
       {
-        id: "p5",
-        text: "اللَّهُ أَكْبَرُ",
-        translation: { en: "Allah is the greatest." },
-        count: 34,
+        id: "mo2",
+        text: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ (عند الخروج)",
+        count: 1,
+        reference: "مسلم",
+      },
+      {
+        id: "mo3",
+        text: "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ (بعد الأذان)",
+        count: 1,
         reference: "مسلم",
       },
     ],
@@ -240,9 +497,20 @@ export const AZKAR: Record<string, AzkarCategory> = {
       {
         id: "t1",
         text: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
-        translation: { en: "Glory be to Him who has subjected this to us, and we to our Lord shall surely return." },
         count: 1,
         reference: "الزخرف",
+      },
+      {
+        id: "t2",
+        text: "اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى",
+        count: 1,
+        reference: "مسلم",
+      },
+      {
+        id: "t3",
+        text: "اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا وَاطْوِ عَنَّا بُعْدَهُ، اللَّهُمَّ أَنْتَ الصَّاحِبُ فِي السَّفَرِ وَالْخَلِيفَةُ فِي الْأَهْلِ",
+        count: 1,
+        reference: "مسلم",
       },
     ],
   },
@@ -250,19 +518,18 @@ export const AZKAR: Record<string, AzkarCategory> = {
     id: "food",
     icon: "Utensils",
     azkar: [
-      {
-        id: "f1",
-        text: "بِسْمِ اللَّهِ",
-        translation: { en: "In the name of Allah." },
-        count: 1,
-        reference: "مسلم",
-      },
+      { id: "f1", text: "بِسْمِ اللَّهِ", count: 1, reference: "مسلم" },
       {
         id: "f2",
         text: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
-        translation: { en: "Praise be to Allah who fed me this and provided it without strength or power from me." },
         count: 1,
         reference: "أبو داود",
+      },
+      {
+        id: "f3",
+        text: "اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ",
+        count: 1,
+        reference: "ابن السني",
       },
     ],
   },
@@ -274,6 +541,47 @@ export const CATEGORY_ORDER = [
   "sleep",
   "wakeup",
   "prayer",
+  "istighfar",
+  "ruqyah",
+  "mosque",
   "travel",
   "food",
 ] as const;
+
+export interface SearchHit {
+  categoryId: string;
+  zikr: Zikr;
+  matchIn: "text" | "translation" | "reference";
+}
+
+export function searchAzkar(query: string): SearchHit[] {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  // Normalize Arabic: remove tashkeel + alef variants
+  const normalize = (s: string) =>
+    s
+      .replace(/[\u064B-\u0652\u0670\u0640]/g, "")
+      .replace(/[إأآا]/g, "ا")
+      .replace(/[ىي]/g, "ي")
+      .replace(/ة/g, "ه")
+      .toLowerCase();
+  const nq = normalize(q);
+  const hits: SearchHit[] = [];
+  for (const cid of CATEGORY_ORDER) {
+    const cat = AZKAR[cid];
+    for (const z of cat.azkar) {
+      if (normalize(z.text).includes(nq)) {
+        hits.push({ categoryId: cid, zikr: z, matchIn: "text" });
+        continue;
+      }
+      if (z.translation && z.translation.en.toLowerCase().includes(q.toLowerCase())) {
+        hits.push({ categoryId: cid, zikr: z, matchIn: "translation" });
+        continue;
+      }
+      if (z.reference && normalize(z.reference).includes(nq)) {
+        hits.push({ categoryId: cid, zikr: z, matchIn: "reference" });
+      }
+    }
+  }
+  return hits;
+}
