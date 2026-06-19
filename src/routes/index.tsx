@@ -194,6 +194,27 @@ function HomePage() {
               <Clock className="size-5 text-primary" />
               <span className="text-[11px] font-medium">{t("prayer.title")}</span>
             </Link>
+            <Link
+              to="/favorites"
+              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
+            >
+              <Heart className="size-5 text-rose-500" />
+              <span className="text-[11px] font-medium">{t("favorites.title")}</span>
+            </Link>
+            <Link
+              to="/stats"
+              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
+            >
+              <TrendingUp className="size-5 text-sky-600" />
+              <span className="text-[11px] font-medium">{t("stats.title")}</span>
+            </Link>
+            <Link
+              to="/azkar"
+              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
+            >
+              <Sparkles className="size-5 text-primary" />
+              <span className="text-[11px] font-medium">{t("tabs.azkar")}</span>
+            </Link>
           </div>
         </section>
 
