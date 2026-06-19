@@ -118,16 +118,20 @@ function RootShell({ children }: { children: ReactNode }) {
 function LangSync() {
   const language = useAppStore((s) => s.language);
   const theme = useAppStore((s) => s.theme);
-  const { i18n } = useTranslation();
   useEffect(() => {
-    if (i18n.language !== language) i18n.changeLanguage(language);
+    import("../lib/i18n").then((mod) => {
+      const inst = mod.default;
+      if (inst && typeof inst.changeLanguage === "function" && inst.language !== language) {
+        inst.changeLanguage(language);
+      }
+    });
     if (typeof document !== "undefined") {
       const root = document.documentElement;
       root.lang = language;
       root.dir = language === "ar" ? "rtl" : "ltr";
       root.classList.toggle("dark", theme === "dark");
     }
-  }, [language, theme, i18n]);
+  }, [language, theme]);
   return null;
 }
 
