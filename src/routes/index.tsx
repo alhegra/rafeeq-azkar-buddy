@@ -12,6 +12,8 @@ import {
   Clock,
   CircleDot,
   ChevronLeft,
+  Heart,
+  TrendingUp,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
