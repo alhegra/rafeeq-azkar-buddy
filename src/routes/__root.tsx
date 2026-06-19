@@ -79,13 +79,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "تطبيق إسلامي شامل للأذكار والأدعية والتسبيح ومواقيت الصلاة واتجاه القبلة — رفيقك اليومي في الذكر.",
       },
-      { property: "og:title", content: "رفيق أذكار" },
+      { property: "og:title", content: "رفيق أذكار — Rafeeq Azkar" },
       {
         property: "og:description",
         content: "رفيقك اليومي في الذكر والعبادة.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/icon-512.png" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a6f2dce6-fae8-4a4e-a5f1-27b5fb09ace3/id-preview-f7709d4d--5fdc9ddc-9539-477f-9cbc-dd83722f8f33.lovable.app-1781894801225.png" },
+      { name: "twitter:title", content: "رفيق أذكار — Rafeeq Azkar" },
+      { name: "description", content: "Daily Azkar is a comprehensive Islamic app for daily worship, featuring Azkar, Duas, prayer times, Qibla, and smart reminders." },
+      { property: "og:description", content: "Daily Azkar is a comprehensive Islamic app for daily worship, featuring Azkar, Duas, prayer times, Qibla, and smart reminders." },
+      { name: "twitter:description", content: "Daily Azkar is a comprehensive Islamic app for daily worship, featuring Azkar, Duas, prayer times, Qibla, and smart reminders." },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a6f2dce6-fae8-4a4e-a5f1-27b5fb09ace3/id-preview-f7709d4d--5fdc9ddc-9539-477f-9cbc-dd83722f8f33.lovable.app-1781894801225.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
