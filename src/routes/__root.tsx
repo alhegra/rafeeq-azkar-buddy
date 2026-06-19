@@ -13,7 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { useAppStore } from "../lib/store";
-import { useTranslation } from "react-i18next";
+
 import { Toaster } from "sonner";
 
 function NotFoundComponent() {
