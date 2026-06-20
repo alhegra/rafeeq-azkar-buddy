@@ -167,6 +167,7 @@ function RootComponent() {
       <LangSync />
       <RemindersMount />
       <Outlet />
+      <AmbientZikr />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );
