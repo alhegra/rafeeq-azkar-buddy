@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset } from "lucide-react";
+import { requestNotificationPermission } from "@/hooks/use-reminders";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -20,6 +22,21 @@ function SettingsPage() {
   const setVibration = useAppStore((s) => s.setVibration);
   const sound = useAppStore((s) => s.sound);
   const setSound = useAppStore((s) => s.setSound);
+  const reminders = useAppStore((s) => s.reminders);
+  const setReminders = useAppStore((s) => s.setReminders);
+
+  const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
+    const turningOn = !reminders[key];
+    if (turningOn) {
+      const ok = await requestNotificationPermission();
+      if (!ok) {
+        toast.error(t("settings.permissionDenied"));
+        return;
+      }
+      toast.success(t("settings.permissionGranted"));
+    }
+    setReminders({ [key]: turningOn });
+  };
 
   return (
     <AppShell>
@@ -94,6 +111,42 @@ function SettingsPage() {
           <Row icon={<Volume2 className="size-5" />} label={t("settings.sound")}>
             <Toggle on={sound} onChange={() => setSound(!sound)} />
           </Row>
+        </Section>
+
+        {/* Reminders */}
+        <Section title={t("settings.reminders")}>
+          <Row icon={<Sunrise className="size-5" />} label={t("settings.morningReminder")}>
+            <div className="flex items-center gap-2">
+              <input
+                type="time"
+                value={reminders.morningTime}
+                onChange={(e) => setReminders({ morningTime: e.target.value })}
+                className="rounded-lg bg-muted px-2 py-1 text-xs text-ink arabic-nums outline-none"
+              />
+              <Toggle
+                on={reminders.morningEnabled}
+                onChange={() => handleToggleReminder("morningEnabled")}
+              />
+            </div>
+          </Row>
+          <Row icon={<Sunset className="size-5" />} label={t("settings.eveningReminder")}>
+            <div className="flex items-center gap-2">
+              <input
+                type="time"
+                value={reminders.eveningTime}
+                onChange={(e) => setReminders({ eveningTime: e.target.value })}
+                className="rounded-lg bg-muted px-2 py-1 text-xs text-ink arabic-nums outline-none"
+              />
+              <Toggle
+                on={reminders.eveningEnabled}
+                onChange={() => handleToggleReminder("eveningEnabled")}
+              />
+            </div>
+          </Row>
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-1.5">
+            <Bell className="size-3.5 mt-0.5 shrink-0" />
+            <span>التنبيهات تعمل عند فتح التطبيق في المتصفح. للحصول على تنبيهات في الخلفية، ثبّت التطبيق على الشاشة الرئيسية.</span>
+          </p>
         </Section>
 
         {/* About */}

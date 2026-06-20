@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { useAppStore } from "../lib/store";
+import { useReminders } from "../hooks/use-reminders";
 
 import { Toaster } from "sonner";
 
@@ -152,12 +153,18 @@ function LangSync() {
   return null;
 }
 
+function RemindersMount() {
+  useReminders();
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <LangSync />
+      <RemindersMount />
       <Outlet />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
