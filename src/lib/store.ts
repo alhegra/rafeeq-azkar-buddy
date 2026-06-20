@@ -52,6 +52,8 @@ interface AppState {
   setVibration: (b: boolean) => void;
   setSound: (b: boolean) => void;
   setReminders: (r: Partial<Reminders>) => void;
+  setAmbientEnabled: (b: boolean) => void;
+  setAmbientIntervalMin: (n: number) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
@@ -94,6 +96,8 @@ export const useAppStore = create<AppState>()(
         eveningEnabled: false,
         eveningTime: "17:30",
       },
+      ambientEnabled: true,
+      ambientIntervalMin: 8,
       favorites: [],
       progress: {},
       tasbeehCount: 0,
