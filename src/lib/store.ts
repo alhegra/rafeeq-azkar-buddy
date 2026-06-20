@@ -26,6 +26,10 @@ interface AppState {
   sound: boolean;
   reminders: Reminders;
 
+  // Ambient zikr bubble
+  ambientEnabled: boolean;
+  ambientIntervalMin: number; // minutes between bubbles
+
   // Favorites
   favorites: string[]; // zikr ids: `${categoryId}:${zikrId}`
 
