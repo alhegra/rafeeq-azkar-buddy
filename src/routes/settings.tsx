@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset } from "lucide-react";
+import { requestNotificationPermission } from "@/hooks/use-reminders";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -20,6 +22,21 @@ function SettingsPage() {
   const setVibration = useAppStore((s) => s.setVibration);
   const sound = useAppStore((s) => s.sound);
   const setSound = useAppStore((s) => s.setSound);
+  const reminders = useAppStore((s) => s.reminders);
+  const setReminders = useAppStore((s) => s.setReminders);
+
+  const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
+    const turningOn = !reminders[key];
+    if (turningOn) {
+      const ok = await requestNotificationPermission();
+      if (!ok) {
+        toast.error(t("settings.permissionDenied"));
+        return;
+      }
+      toast.success(t("settings.permissionGranted"));
+    }
+    setReminders({ [key]: turningOn });
+  };
 
   return (
     <AppShell>

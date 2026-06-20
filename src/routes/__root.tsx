@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { useAppStore } from "../lib/store";
+import { useReminders } from "../hooks/use-reminders";
 
 import { Toaster } from "sonner";
 
@@ -153,8 +154,6 @@ function LangSync() {
 }
 
 function RemindersMount() {
-  // dynamic import avoids SSR issues
-  const useReminders = require("../hooks/use-reminders").useReminders as () => void;
   useReminders();
   return null;
 }
