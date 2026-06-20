@@ -24,6 +24,10 @@ function SettingsPage() {
   const setSound = useAppStore((s) => s.setSound);
   const reminders = useAppStore((s) => s.reminders);
   const setReminders = useAppStore((s) => s.setReminders);
+  const ambientEnabled = useAppStore((s) => s.ambientEnabled);
+  const setAmbientEnabled = useAppStore((s) => s.setAmbientEnabled);
+  const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
+  const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
 
   const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
     const turningOn = !reminders[key];
