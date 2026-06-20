@@ -113,6 +113,42 @@ function SettingsPage() {
           </Row>
         </Section>
 
+        {/* Reminders */}
+        <Section title={t("settings.reminders")}>
+          <Row icon={<Sunrise className="size-5" />} label={t("settings.morningReminder")}>
+            <div className="flex items-center gap-2">
+              <input
+                type="time"
+                value={reminders.morningTime}
+                onChange={(e) => setReminders({ morningTime: e.target.value })}
+                className="rounded-lg bg-muted px-2 py-1 text-xs text-ink arabic-nums outline-none"
+              />
+              <Toggle
+                on={reminders.morningEnabled}
+                onChange={() => handleToggleReminder("morningEnabled")}
+              />
+            </div>
+          </Row>
+          <Row icon={<Sunset className="size-5" />} label={t("settings.eveningReminder")}>
+            <div className="flex items-center gap-2">
+              <input
+                type="time"
+                value={reminders.eveningTime}
+                onChange={(e) => setReminders({ eveningTime: e.target.value })}
+                className="rounded-lg bg-muted px-2 py-1 text-xs text-ink arabic-nums outline-none"
+              />
+              <Toggle
+                on={reminders.eveningEnabled}
+                onChange={() => handleToggleReminder("eveningEnabled")}
+              />
+            </div>
+          </Row>
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-1.5">
+            <Bell className="size-3.5 mt-0.5 shrink-0" />
+            <span>التنبيهات تعمل عند فتح التطبيق في المتصفح. للحصول على تنبيهات في الخلفية، ثبّت التطبيق على الشاشة الرئيسية.</span>
+          </p>
+        </Section>
+
         {/* About */}
         <Section title={t("settings.about")}>
           <Row icon={<Info className="size-5" />} label={t("appName")}>
