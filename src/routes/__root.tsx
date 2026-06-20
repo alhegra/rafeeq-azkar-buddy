@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { useAppStore } from "../lib/store";
 import { useReminders } from "../hooks/use-reminders";
+import { AmbientZikr } from "../components/ambient-zikr";
 
 import { Toaster } from "sonner";
 
@@ -166,6 +167,7 @@ function RootComponent() {
       <LangSync />
       <RemindersMount />
       <Outlet />
+      <AmbientZikr />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );

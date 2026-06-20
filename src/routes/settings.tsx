@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
 import { toast } from "sonner";
 
@@ -24,6 +24,10 @@ function SettingsPage() {
   const setSound = useAppStore((s) => s.setSound);
   const reminders = useAppStore((s) => s.reminders);
   const setReminders = useAppStore((s) => s.setReminders);
+  const ambientEnabled = useAppStore((s) => s.ambientEnabled);
+  const setAmbientEnabled = useAppStore((s) => s.setAmbientEnabled);
+  const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
+  const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
 
   const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
     const turningOn = !reminders[key];
@@ -148,6 +152,41 @@ function SettingsPage() {
             <span>التنبيهات تعمل عند فتح التطبيق في المتصفح. للحصول على تنبيهات في الخلفية، ثبّت التطبيق على الشاشة الرئيسية.</span>
           </p>
         </Section>
+
+        {/* Ambient zikr */}
+        <Section title={t("settings.ambient")}>
+          <Row icon={<Sparkles className="size-5" />} label={t("settings.ambient")}>
+            <Toggle
+              on={ambientEnabled}
+              onChange={() => setAmbientEnabled(!ambientEnabled)}
+            />
+          </Row>
+          {ambientEnabled && (
+            <Row icon={<Bell className="size-5" />} label={t("settings.ambientInterval")}>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setAmbientIntervalMin(ambientIntervalMin - 1)}
+                  className="size-8 rounded-full bg-muted text-ink font-bold active:scale-95"
+                >
+                  −
+                </button>
+                <span className="w-10 text-center text-sm font-semibold arabic-nums">
+                  {ambientIntervalMin}
+                </span>
+                <button
+                  onClick={() => setAmbientIntervalMin(ambientIntervalMin + 1)}
+                  className="size-8 rounded-full bg-muted text-ink font-bold active:scale-95"
+                >
+                  +
+                </button>
+              </div>
+            </Row>
+          )}
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+            {t("settings.ambientHint")}
+          </p>
+        </Section>
+
 
         {/* About */}
         <Section title={t("settings.about")}>

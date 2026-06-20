@@ -26,6 +26,10 @@ interface AppState {
   sound: boolean;
   reminders: Reminders;
 
+  // Ambient zikr bubble
+  ambientEnabled: boolean;
+  ambientIntervalMin: number; // minutes between bubbles
+
   // Favorites
   favorites: string[]; // zikr ids: `${categoryId}:${zikrId}`
 
@@ -48,6 +52,8 @@ interface AppState {
   setVibration: (b: boolean) => void;
   setSound: (b: boolean) => void;
   setReminders: (r: Partial<Reminders>) => void;
+  setAmbientEnabled: (b: boolean) => void;
+  setAmbientIntervalMin: (n: number) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
@@ -90,6 +96,8 @@ export const useAppStore = create<AppState>()(
         eveningEnabled: false,
         eveningTime: "17:30",
       },
+      ambientEnabled: true,
+      ambientIntervalMin: 8,
       favorites: [],
       progress: {},
       tasbeehCount: 0,
@@ -104,6 +112,8 @@ export const useAppStore = create<AppState>()(
       setVibration: (b) => set({ vibration: b }),
       setSound: (b) => set({ sound: b }),
       setReminders: (r) => set({ reminders: { ...get().reminders, ...r } }),
+      setAmbientEnabled: (b) => set({ ambientEnabled: b }),
+      setAmbientIntervalMin: (n) => set({ ambientIntervalMin: Math.max(1, Math.min(120, n)) }),
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
