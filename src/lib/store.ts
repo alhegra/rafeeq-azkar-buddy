@@ -84,6 +84,12 @@ export const useAppStore = create<AppState>()(
       fontSize: 22,
       vibration: true,
       sound: false,
+      reminders: {
+        morningEnabled: false,
+        morningTime: "06:30",
+        eveningEnabled: false,
+        eveningTime: "17:30",
+      },
       favorites: [],
       progress: {},
       tasbeehCount: 0,
@@ -97,6 +103,7 @@ export const useAppStore = create<AppState>()(
       setFontSize: (n) => set({ fontSize: Math.max(16, Math.min(32, n)) }),
       setVibration: (b) => set({ vibration: b }),
       setSound: (b) => set({ sound: b }),
+      setReminders: (r) => set({ reminders: { ...get().reminders, ...r } }),
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
