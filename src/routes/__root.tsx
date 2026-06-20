@@ -152,12 +152,20 @@ function LangSync() {
   return null;
 }
 
+function RemindersMount() {
+  // dynamic import avoids SSR issues
+  const useReminders = require("../hooks/use-reminders").useReminders as () => void;
+  useReminders();
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <LangSync />
+      <RemindersMount />
       <Outlet />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
