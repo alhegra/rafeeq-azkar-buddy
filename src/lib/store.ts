@@ -10,6 +10,13 @@ export interface DailyStat {
   azkarRead: number;
 }
 
+export interface Reminders {
+  morningEnabled: boolean;
+  morningTime: string; // "HH:mm"
+  eveningEnabled: boolean;
+  eveningTime: string;
+}
+
 interface AppState {
   // Settings
   language: Language;
@@ -17,6 +24,7 @@ interface AppState {
   fontSize: number; // 16..28
   vibration: boolean;
   sound: boolean;
+  reminders: Reminders;
 
   // Favorites
   favorites: string[]; // zikr ids: `${categoryId}:${zikrId}`
@@ -39,6 +47,7 @@ interface AppState {
   setFontSize: (n: number) => void;
   setVibration: (b: boolean) => void;
   setSound: (b: boolean) => void;
+  setReminders: (r: Partial<Reminders>) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
