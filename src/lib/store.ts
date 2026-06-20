@@ -112,6 +112,8 @@ export const useAppStore = create<AppState>()(
       setVibration: (b) => set({ vibration: b }),
       setSound: (b) => set({ sound: b }),
       setReminders: (r) => set({ reminders: { ...get().reminders, ...r } }),
+      setAmbientEnabled: (b) => set({ ambientEnabled: b }),
+      setAmbientIntervalMin: (n) => set({ ambientIntervalMin: Math.max(1, Math.min(120, n)) }),
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
