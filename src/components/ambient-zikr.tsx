@@ -6,20 +6,34 @@ import { useAppStore } from "@/lib/store";
 interface Pick {
   text: string;
   reference?: string;
-  category: string;
 }
 
 function buildPool(): Pick[] {
   const pool: Pick[] = [];
   for (const cat of Object.values(AZKAR)) {
     for (const z of cat.azkar) {
-      // keep only short, tweet-sized azkar so the bubble stays calm
-      if (z.text.length <= 110) {
-        pool.push({ text: z.text, reference: z.reference, category: cat.id });
+      if (z.text.length <= 90) {
+        pool.push({ text: z.text, reference: z.reference });
       }
     }
   }
   return pool;
+}
+
+function fireOsNotification(text: string) {
+  if (typeof window === "undefined" || !("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+  if (typeof document !== "undefined" && document.visibilityState === "visible") return;
+  try {
+    new Notification("ذكر لله", {
+      body: text,
+      icon: "/icon-192.png",
+      tag: "ambient-zikr",
+      silent: true,
+    });
+  } catch {
+    /* noop */
+  }
 }
 
 export function AmbientZikr() {
@@ -43,12 +57,12 @@ export function AmbientZikr() {
       const next = pool[Math.floor(Math.random() * pool.length)];
       setPick(next);
       setVisible(true);
-      hideTimer = window.setTimeout(() => setVisible(false), 9000);
+      fireOsNotification(next.text);
+      hideTimer = window.setTimeout(() => setVisible(false), 8000);
       showTimer = window.setTimeout(showOne, intervalMin * 60 * 1000);
     };
 
-    // first appearance: small delay after mount
-    showTimer = window.setTimeout(showOne, 25_000);
+    showTimer = window.setTimeout(showOne, 20_000);
 
     return () => {
       if (showTimer) clearTimeout(showTimer);
@@ -62,22 +76,23 @@ export function AmbientZikr() {
     <div
       aria-live="polite"
       className={
-        "pointer-events-none fixed inset-x-0 bottom-24 z-40 flex justify-center px-4 transition-all duration-700 ease-out " +
+        "fixed z-40 end-3 bottom-24 max-w-[78%] sm:max-w-xs transition-all duration-500 ease-out " +
         (visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4 pointer-events-none")
+          ? "opacity-100 translate-x-0"
+          : "opacity-0 translate-x-4 pointer-events-none")
       }
     >
-      <div className="pointer-events-auto glass-card relative max-w-sm w-full rounded-3xl px-5 py-4 ring-1 ring-black/5 shadow-xl">
-        <div className="absolute -top-6 -end-6 size-24 rounded-full bg-primary/15 blur-2xl" />
-        <div className="relative flex items-start gap-3">
-          <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Sparkles className="size-4" />
+      <div className="glass-card relative rounded-2xl ps-3 pe-2 py-2.5 shadow-lg ring-1 ring-black/5 backdrop-blur-xl bg-background/80">
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Sparkles className="size-3.5" />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="font-body leading-loose text-ink text-[15px]">{pick.text}</p>
+            <p className="font-body leading-snug text-ink text-[13.5px] line-clamp-3">
+              {pick.text}
+            </p>
             {pick.reference && (
-              <p className="mt-1.5 text-[11px] text-muted-foreground arabic-nums">
+              <p className="mt-1 text-[10px] text-muted-foreground arabic-nums truncate">
                 {pick.reference}
               </p>
             )}
@@ -85,9 +100,9 @@ export function AmbientZikr() {
           <button
             onClick={() => setVisible(false)}
             aria-label="إغلاق"
-            className="shrink-0 -me-1 -mt-1 flex size-7 items-center justify-center rounded-full text-muted-foreground hover:bg-muted active:scale-95 transition"
+            className="shrink-0 flex size-6 items-center justify-center rounded-full text-muted-foreground/70 hover:bg-muted active:scale-95 transition"
           >
-            <X className="size-4" />
+            <X className="size-3.5" />
           </button>
         </div>
       </div>
