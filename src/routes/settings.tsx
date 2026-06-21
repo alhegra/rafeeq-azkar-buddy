@@ -158,7 +158,11 @@ function SettingsPage() {
           <Row icon={<Sparkles className="size-5" />} label={t("settings.ambient")}>
             <Toggle
               on={ambientEnabled}
-              onChange={() => setAmbientEnabled(!ambientEnabled)}
+              onChange={async () => {
+                const turningOn = !ambientEnabled;
+                if (turningOn) await requestNotificationPermission();
+                setAmbientEnabled(turningOn);
+              }}
             />
           </Row>
           {ambientEnabled && (
