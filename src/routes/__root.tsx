@@ -159,12 +159,20 @@ function RemindersMount() {
   return null;
 }
 
+function SWMount() {
+  useEffect(() => {
+    void import("../lib/sw-register").then((m) => m.registerReminderSW());
+  }, []);
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <LangSync />
+      <SWMount />
       <RemindersMount />
       <Outlet />
       <AmbientZikr />
