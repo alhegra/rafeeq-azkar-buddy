@@ -36,6 +36,63 @@ function SettingsPage() {
   const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
   const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
 
+  // PWA install
+  const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const isIOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as unknown as { MSStream?: unknown }).MSStream;
+
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallEvent(e as BeforeInstallPromptEvent);
+    };
+    const onInstalled = () => {
+      setIsInstalled(true);
+      setInstallEvent(null);
+    };
+    if (typeof window !== "undefined") {
+      const standalone =
+        window.matchMedia?.("(display-mode: standalone)").matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      setIsInstalled(Boolean(standalone));
+      window.addEventListener("beforeinstallprompt", onPrompt);
+      window.addEventListener("appinstalled", onInstalled);
+      return () => {
+        window.removeEventListener("beforeinstallprompt", onPrompt);
+        window.removeEventListener("appinstalled", onInstalled);
+      };
+    }
+  }, []);
+
+  const handleInstall = async () => {
+    if (installEvent) {
+      await installEvent.prompt();
+      const res = await installEvent.userChoice;
+      if (res.outcome === "accepted") {
+        setIsInstalled(true);
+        toast.success("تم تثبيت التطبيق");
+      }
+      setInstallEvent(null);
+    } else if (isIOS) {
+      toast.message("على iPhone/iPad: اضغط زر المشاركة ⬆ ثم اختر «أضف إلى الشاشة الرئيسية»", { duration: 7000 });
+    } else {
+      toast.message("افتح قائمة المتصفح ثم اختر «ثبّت التطبيق» أو «أضف إلى الشاشة الرئيسية»", { duration: 7000 });
+    }
+  };
+
+  const handleTestNotification = async () => {
+    const ok = await requestNotificationPermission();
+    if (!ok) {
+      toast.error(t("settings.permissionDenied"));
+      return;
+    }
+    // Slight delay so a user can switch tabs to confirm it fires in background.
+    setTimeout(() => {
+      void sendTestNotification();
+    }, 1500);
+    toast.success("سيظهر التذكير خلال لحظات — يمكنك تصغير التطبيق لرؤيته");
+  };
+
   const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
     const turningOn = !reminders[key];
     if (turningOn) {
