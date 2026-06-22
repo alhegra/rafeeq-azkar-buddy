@@ -181,6 +181,35 @@ function SettingsPage() {
           </Row>
         </Section>
 
+        {/* Install as App */}
+        <Section title="تثبيت التطبيق">
+          <Row
+            icon={isInstalled ? <Smartphone className="size-5" /> : <Download className="size-5" />}
+            label={isInstalled ? "التطبيق مثبّت ✓" : "ثبّت التطبيق على جهازك"}
+          >
+            {!isInstalled && (
+              <button
+                onClick={handleInstall}
+                className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground active:scale-95 transition"
+              >
+                {installEvent ? "تثبيت" : "كيف؟"}
+              </button>
+            )}
+          </Row>
+          <Row icon={<Send className="size-5" />} label="جرّب التذكير الآن">
+            <button
+              onClick={handleTestNotification}
+              className="rounded-full bg-muted px-4 py-1.5 text-xs font-medium text-ink active:scale-95 transition"
+            >
+              إرسال
+            </button>
+          </Row>
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+            بعد التثبيت ومنح إذن الإشعارات، تظهر التذكيرات حتى لو كان التطبيق مغلقاً تماماً (طالما الجهاز يعمل).
+            {isIOS && " على iPhone: من Safari اضغط زر المشاركة ← «إضافة إلى الشاشة الرئيسية»."}
+          </p>
+        </Section>
+
         {/* Reminders */}
         <Section title={t("settings.reminders")}>
           <Row icon={<Sunrise className="size-5" />} label={t("settings.morningReminder")}>
@@ -213,7 +242,7 @@ function SettingsPage() {
           </Row>
           <p className="px-1 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-1.5">
             <Bell className="size-3.5 mt-0.5 shrink-0" />
-            <span>التنبيهات تعمل عند فتح التطبيق في المتصفح. للحصول على تنبيهات في الخلفية، ثبّت التطبيق على الشاشة الرئيسية.</span>
+            <span>التذكيرات تعمل في الخلفية بعد تثبيت التطبيق ومنح إذن الإشعارات (انظر القسم أعلاه).</span>
           </p>
         </Section>
 
