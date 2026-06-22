@@ -1,14 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
+import { sendTestNotification } from "@/lib/reminders-bridge";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
 
 function SettingsPage() {
   const { t } = useTranslation();
@@ -28,6 +35,63 @@ function SettingsPage() {
   const setAmbientEnabled = useAppStore((s) => s.setAmbientEnabled);
   const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
   const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
+
+  // PWA install
+  const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const isIOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as unknown as { MSStream?: unknown }).MSStream;
+
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallEvent(e as BeforeInstallPromptEvent);
+    };
+    const onInstalled = () => {
+      setIsInstalled(true);
+      setInstallEvent(null);
+    };
+    if (typeof window !== "undefined") {
+      const standalone =
+        window.matchMedia?.("(display-mode: standalone)").matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      setIsInstalled(Boolean(standalone));
+      window.addEventListener("beforeinstallprompt", onPrompt);
+      window.addEventListener("appinstalled", onInstalled);
+      return () => {
+        window.removeEventListener("beforeinstallprompt", onPrompt);
+        window.removeEventListener("appinstalled", onInstalled);
+      };
+    }
+  }, []);
+
+  const handleInstall = async () => {
+    if (installEvent) {
+      await installEvent.prompt();
+      const res = await installEvent.userChoice;
+      if (res.outcome === "accepted") {
+        setIsInstalled(true);
+        toast.success("تم تثبيت التطبيق");
+      }
+      setInstallEvent(null);
+    } else if (isIOS) {
+      toast.message("على iPhone/iPad: اضغط زر المشاركة ⬆ ثم اختر «أضف إلى الشاشة الرئيسية»", { duration: 7000 });
+    } else {
+      toast.message("افتح قائمة المتصفح ثم اختر «ثبّت التطبيق» أو «أضف إلى الشاشة الرئيسية»", { duration: 7000 });
+    }
+  };
+
+  const handleTestNotification = async () => {
+    const ok = await requestNotificationPermission();
+    if (!ok) {
+      toast.error(t("settings.permissionDenied"));
+      return;
+    }
+    // Slight delay so a user can switch tabs to confirm it fires in background.
+    setTimeout(() => {
+      void sendTestNotification();
+    }, 1500);
+    toast.success("سيظهر التذكير خلال لحظات — يمكنك تصغير التطبيق لرؤيته");
+  };
 
   const handleToggleReminder = async (key: "morningEnabled" | "eveningEnabled") => {
     const turningOn = !reminders[key];
@@ -117,6 +181,35 @@ function SettingsPage() {
           </Row>
         </Section>
 
+        {/* Install as App */}
+        <Section title="تثبيت التطبيق">
+          <Row
+            icon={isInstalled ? <Smartphone className="size-5" /> : <Download className="size-5" />}
+            label={isInstalled ? "التطبيق مثبّت ✓" : "ثبّت التطبيق على جهازك"}
+          >
+            {!isInstalled && (
+              <button
+                onClick={handleInstall}
+                className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground active:scale-95 transition"
+              >
+                {installEvent ? "تثبيت" : "كيف؟"}
+              </button>
+            )}
+          </Row>
+          <Row icon={<Send className="size-5" />} label="جرّب التذكير الآن">
+            <button
+              onClick={handleTestNotification}
+              className="rounded-full bg-muted px-4 py-1.5 text-xs font-medium text-ink active:scale-95 transition"
+            >
+              إرسال
+            </button>
+          </Row>
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+            بعد التثبيت ومنح إذن الإشعارات، تظهر التذكيرات حتى لو كان التطبيق مغلقاً تماماً (طالما الجهاز يعمل).
+            {isIOS && " على iPhone: من Safari اضغط زر المشاركة ← «إضافة إلى الشاشة الرئيسية»."}
+          </p>
+        </Section>
+
         {/* Reminders */}
         <Section title={t("settings.reminders")}>
           <Row icon={<Sunrise className="size-5" />} label={t("settings.morningReminder")}>
@@ -149,7 +242,7 @@ function SettingsPage() {
           </Row>
           <p className="px-1 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-1.5">
             <Bell className="size-3.5 mt-0.5 shrink-0" />
-            <span>التنبيهات تعمل عند فتح التطبيق في المتصفح. للحصول على تنبيهات في الخلفية، ثبّت التطبيق على الشاشة الرئيسية.</span>
+            <span>التذكيرات تعمل في الخلفية بعد تثبيت التطبيق ومنح إذن الإشعارات (انظر القسم أعلاه).</span>
           </p>
         </Section>
 
