@@ -1,4 +1,10 @@
 import { getActiveSW, isSWSupported } from "./sw-register";
+import {
+  isNative,
+  pushNativeSchedule,
+  clearNativeSchedule,
+  sendNativeTest,
+} from "./native-reminders";
 
 export type ReminderItem =
   | {
@@ -34,10 +40,20 @@ async function postToSW(msg: unknown): Promise<boolean> {
 }
 
 export async function pushSchedule(items: ReminderItem[]): Promise<boolean> {
+  // On Android (Capacitor) use native LocalNotifications — they fire when the
+  // app is fully closed. The service worker path is web/PWA only.
+  if (isNative()) {
+    await pushNativeSchedule(items);
+    return true;
+  }
   return postToSW({ type: "SCHEDULE_SET", items });
 }
 
 export async function clearSchedule(): Promise<boolean> {
+  if (isNative()) {
+    await clearNativeSchedule();
+    return true;
+  }
   return postToSW({ type: "SCHEDULE_CLEAR" });
 }
 
@@ -45,6 +61,9 @@ export async function sendTestNotification(
   title = "تذكير تجريبي",
   body = "إن شاء الله ستصلك التذكيرات بهذا الشكل.",
 ): Promise<boolean> {
+  if (isNative()) {
+    return sendNativeTest(title, body);
+  }
   // Prefer SW (works when app is closed). Fallback to in-page Notification.
   const viaSW = await postToSW({ type: "TEST_NOTIFY", title, body });
   if (viaSW) return true;
