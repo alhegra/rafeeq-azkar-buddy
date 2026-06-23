@@ -2,7 +2,7 @@ import { registerPlugin, Capacitor } from "@capacitor/core";
 
 export interface ZikrOverlayPlugin {
   hasPermission(): Promise<{ granted: boolean }>;
-  requestPermission(): Promise<{ opened: boolean }>;
+  requestPermission(): Promise<{ opened: boolean; granted: boolean }>;
   showOverlay(opts: { text: string; durationMs?: number }): Promise<void>;
   hideOverlay(): Promise<void>;
   startSchedule(opts: {
@@ -23,18 +23,23 @@ export async function hasOverlayPermission(): Promise<boolean> {
   if (!isAndroidNative()) return false;
   try {
     const { granted } = await ZikrOverlay.hasPermission();
+    console.log("[native-overlay] hasPermission:", granted);
     return granted;
-  } catch {
+  } catch (err) {
+    console.warn("[native-overlay] hasPermission failed", err);
     return false;
   }
 }
 
-export async function requestOverlayPermission(): Promise<void> {
-  if (!isAndroidNative()) return;
+export async function requestOverlayPermission(): Promise<boolean> {
+  if (!isAndroidNative()) return false;
   try {
-    await ZikrOverlay.requestPermission();
-  } catch {
-    /* ignore */
+    const res = await ZikrOverlay.requestPermission();
+    console.log("[native-overlay] requestPermission result:", res);
+    return Boolean((res as { granted?: boolean })?.granted);
+  } catch (err) {
+    console.warn("[native-overlay] requestPermission failed", err);
+    return false;
   }
 }
 

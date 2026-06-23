@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat, Layers } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
 import { sendTestNotification } from "@/lib/reminders-bridge";
 import { speakArabic, isSpeechSupported } from "@/lib/speech";
@@ -16,6 +16,17 @@ import {
   startOverlaySchedule,
   stopOverlaySchedule,
 } from "@/lib/native-overlay";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { CheckCircle2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
@@ -52,6 +63,7 @@ function SettingsPage() {
   const setOverlayEnabled = useAppStore((s) => s.setOverlayEnabled);
 
   const [overlayGranted, setOverlayGranted] = useState(false);
+  const [overlayDialogOpen, setOverlayDialogOpen] = useState(false);
   const onAndroid = isAndroidNative();
 
   useEffect(() => {
@@ -462,19 +474,29 @@ function SettingsPage() {
 
 
 
-        {/* Floating overlay (Android only) */}
+        {/* Floating Thikr Widget (Android only) */}
         {onAndroid && (
-          <Section title="الإظهار فوق التطبيقات">
-            <Row icon={<Layers className="size-5" />} label={overlayGranted ? "الإذن ممنوح ✓" : "طلب إذن «الإظهار فوق التطبيقات»"}>
-              {!overlayGranted && (
+          <Section title="الذكر العائم فوق التطبيقات">
+            <Row
+              icon={
+                overlayGranted ? (
+                  <CheckCircle2 className="size-5" />
+                ) : (
+                  <ShieldAlert className="size-5" />
+                )
+              }
+              label={overlayGranted ? "الإذن مفعّل" : "الإذن غير مفعّل"}
+            >
+              {overlayGranted ? (
+                <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-semibold text-emerald-600">
+                  ممنوح ✓
+                </span>
+              ) : (
                 <button
-                  onClick={async () => {
-                    await requestOverlayPermission();
-                    toast.message("فعّل الإذن من الإعدادات ثم ارجع للتطبيق", { duration: 5000 });
-                  }}
+                  onClick={() => setOverlayDialogOpen(true)}
                   className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground active:scale-95"
                 >
-                  فتح الإعدادات
+                  تفعيل الإذن
                 </button>
               )}
             </Row>
@@ -493,8 +515,41 @@ function SettingsPage() {
             </Row>
 
             <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
-              يستخدم نافذة عائمة حقيقية (System Overlay) لإظهار الأذكار فوق أي تطبيق آخر — حتى لو كان «رفيق أذكار» مغلقاً. يتم اختيار الأذكار من قائمة «التذكيرات السريعة» بالأعلى، ووفق الفترة الزمنية المُعدّة فيها.
+              نافذة عائمة حقيقية (System Overlay) تُظهر الأذكار فوق أي تطبيق آخر — حتى لو كان «رفيق
+              أذكار» مغلقاً. تُستخدم قائمة «التذكيرات السريعة» وفترتها الزمنية.
             </p>
+
+            <AlertDialog open={overlayDialogOpen} onOpenChange={setOverlayDialogOpen}>
+              <AlertDialogContent dir="rtl" className="text-right">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-right">
+                    صلاحية الظهور فوق التطبيقات الأخرى
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-right leading-loose">
+                    يحتاج رفيق الذكر إلى صلاحية الظهور فوق التطبيقات الأخرى لعرض الذكر العائم أثناء
+                    استخدام الهاتف.
+                    <br />
+                    <br />
+                    سيتم فتح إعدادات النظام الآن — فعّل خيار «السماح بالعرض فوق التطبيقات الأخرى»
+                    ثم عد إلى التطبيق.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="gap-2">
+                  <AlertDialogCancel>لاحقاً</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={async () => {
+                      console.log("[overlay] requesting permission…");
+                      await requestOverlayPermission();
+                      toast.message("بعد التفعيل عُد للتطبيق وسيُحدَّث الحالة تلقائياً", {
+                        duration: 6000,
+                      });
+                    }}
+                  >
+                    فتح الإعدادات
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </Section>
         )}
 
