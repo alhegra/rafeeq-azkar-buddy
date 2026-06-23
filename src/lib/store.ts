@@ -160,6 +160,7 @@ export const useAppStore = create<AppState>()(
         fromHour: 7,
         toHour: 23,
       },
+      overlayEnabled: false,
       favorites: [],
       progress: {},
       tasbeehCount: 0,
