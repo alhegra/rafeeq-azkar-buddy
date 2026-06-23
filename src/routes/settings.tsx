@@ -37,6 +37,9 @@ function SettingsPage() {
   const setAmbientEnabled = useAppStore((s) => s.setAmbientEnabled);
   const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
   const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
+  const quickAzkar = useAppStore((s) => s.quickAzkar);
+  const setQuickAzkar = useAppStore((s) => s.setQuickAzkar);
+  const toggleQuickId = useAppStore((s) => s.toggleQuickId);
 
   // PWA install
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
