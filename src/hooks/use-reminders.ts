@@ -151,6 +151,20 @@ export function useReminders() {
 }
 
 export async function requestNotificationPermission(): Promise<boolean> {
+  // Capacitor (Android/iOS) → use LocalNotifications which triggers the
+  // native POST_NOTIFICATIONS system dialog (Android 13+).
+  try {
+    const { Capacitor } = await import("@capacitor/core");
+    if (Capacitor.isNativePlatform()) {
+      const { LocalNotifications } = await import("@capacitor/local-notifications");
+      const cur = await LocalNotifications.checkPermissions();
+      if (cur.display === "granted") return true;
+      const res = await LocalNotifications.requestPermissions();
+      return res.display === "granted";
+    }
+  } catch {
+    /* fall through to web */
+  }
   if (typeof window === "undefined" || !("Notification" in window)) return false;
   if (Notification.permission === "granted") return true;
   if (Notification.permission === "denied") return false;
