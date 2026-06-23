@@ -55,6 +55,8 @@ interface AppState {
 
   quickAzkar: QuickAzkarSettings;
 
+  overlayEnabled: boolean;
+
   favorites: string[];
   progress: Record<string, Record<string, number>>;
 
@@ -81,6 +83,7 @@ interface AppState {
   setAmbientIntervalMin: (n: number) => void;
   setQuickAzkar: (q: Partial<QuickAzkarSettings>) => void;
   toggleQuickId: (id: string) => void;
+  setOverlayEnabled: (b: boolean) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
@@ -157,6 +160,7 @@ export const useAppStore = create<AppState>()(
         fromHour: 7,
         toHour: 23,
       },
+      overlayEnabled: false,
       favorites: [],
       progress: {},
       tasbeehCount: 0,
@@ -184,6 +188,8 @@ export const useAppStore = create<AppState>()(
         const ids = cur.ids.includes(id) ? cur.ids.filter((x) => x !== id) : [...cur.ids, id];
         set({ quickAzkar: { ...cur, ids } });
       },
+      setOverlayEnabled: (b) => set({ overlayEnabled: b }),
+
 
       toggleFavorite: (id) => {
         const favs = get().favorites;

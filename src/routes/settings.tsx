@@ -3,11 +3,19 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat, Layers } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
 import { sendTestNotification } from "@/lib/reminders-bridge";
 import { speakArabic, isSpeechSupported } from "@/lib/speech";
 import { QUICK_AZKAR } from "@/lib/quick-azkar";
+import {
+  isAndroidNative,
+  hasOverlayPermission,
+  requestOverlayPermission,
+  showZikrOverlay,
+  startOverlaySchedule,
+  stopOverlaySchedule,
+} from "@/lib/native-overlay";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
@@ -40,6 +48,56 @@ function SettingsPage() {
   const quickAzkar = useAppStore((s) => s.quickAzkar);
   const setQuickAzkar = useAppStore((s) => s.setQuickAzkar);
   const toggleQuickId = useAppStore((s) => s.toggleQuickId);
+  const overlayEnabled = useAppStore((s) => s.overlayEnabled);
+  const setOverlayEnabled = useAppStore((s) => s.setOverlayEnabled);
+
+  const [overlayGranted, setOverlayGranted] = useState(false);
+  const onAndroid = isAndroidNative();
+
+  useEffect(() => {
+    if (!onAndroid) return;
+    void hasOverlayPermission().then(setOverlayGranted);
+    const onVis = () => {
+      if (document.visibilityState === "visible") {
+        void hasOverlayPermission().then(setOverlayGranted);
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [onAndroid]);
+
+  const handleOverlayToggle = async () => {
+    const turningOn = !overlayEnabled;
+    if (turningOn) {
+      const granted = await hasOverlayPermission();
+      if (!granted) {
+        await requestOverlayPermission();
+        toast.message("افتح إذن «الإظهار فوق التطبيقات الأخرى» من الإعدادات ثم عد للتطبيق", {
+          duration: 6000,
+        });
+        return;
+      }
+      await startOverlaySchedule({
+        azkar: QUICK_AZKAR.filter((q) => quickAzkar.ids.includes(q.id)).map((q) => q.text),
+        intervalMin: quickAzkar.intervalMin,
+        fromHour: quickAzkar.fromHour,
+        toHour: quickAzkar.toHour,
+      });
+      toast.success("تم تفعيل الإظهار فوق التطبيقات");
+    } else {
+      await stopOverlaySchedule();
+    }
+    setOverlayEnabled(turningOn);
+  };
+
+  const handleOverlayPreview = async () => {
+    const granted = await hasOverlayPermission();
+    if (!granted) {
+      await requestOverlayPermission();
+      return;
+    }
+    await showZikrOverlay("سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", 6000);
+  };
 
   // PWA install
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
@@ -403,6 +461,42 @@ function SettingsPage() {
 
 
 
+
+        {/* Floating overlay (Android only) */}
+        {onAndroid && (
+          <Section title="الإظهار فوق التطبيقات">
+            <Row icon={<Layers className="size-5" />} label={overlayGranted ? "الإذن ممنوح ✓" : "طلب إذن «الإظهار فوق التطبيقات»"}>
+              {!overlayGranted && (
+                <button
+                  onClick={async () => {
+                    await requestOverlayPermission();
+                    toast.message("فعّل الإذن من الإعدادات ثم ارجع للتطبيق", { duration: 5000 });
+                  }}
+                  className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground active:scale-95"
+                >
+                  فتح الإعدادات
+                </button>
+              )}
+            </Row>
+
+            <Row icon={<Sparkles className="size-5" />} label="إظهار الأذكار فوق أي تطبيق">
+              <Toggle on={overlayEnabled} onChange={handleOverlayToggle} />
+            </Row>
+
+            <Row icon={<Send className="size-5" />} label="معاينة فورية">
+              <button
+                onClick={handleOverlayPreview}
+                className="rounded-full bg-muted px-4 py-1.5 text-xs font-medium text-ink active:scale-95"
+              >
+                عرض الآن
+              </button>
+            </Row>
+
+            <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+              يستخدم نافذة عائمة حقيقية (System Overlay) لإظهار الأذكار فوق أي تطبيق آخر — حتى لو كان «رفيق أذكار» مغلقاً. يتم اختيار الأذكار من قائمة «التذكيرات السريعة» بالأعلى، ووفق الفترة الزمنية المُعدّة فيها.
+            </p>
+          </Section>
+        )}
 
         {/* About */}
         <Section title={t("settings.about")}>
