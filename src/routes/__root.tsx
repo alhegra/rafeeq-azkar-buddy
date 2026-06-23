@@ -177,6 +177,7 @@ function RootComponent() {
       <RemindersMount />
       <Outlet />
       <AmbientZikr />
+      <SpeakOnLoad />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );
