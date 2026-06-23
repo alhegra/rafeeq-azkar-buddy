@@ -63,8 +63,6 @@ jobs:
             echo "android/ already present"
           fi
 
-      - name: Patch Android project (overlay plugin + permissions)
-        run: node scripts/patch-android.mjs
 
       - name: Copy web assets + sync plugins
         run: bunx cap sync android
