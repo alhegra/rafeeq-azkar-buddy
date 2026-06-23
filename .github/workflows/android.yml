@@ -45,7 +45,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build web bundle (SPA for WebView)
-        run: vite build --mode spa
+        run: bunx vite build --mode spa
 
       - name: Verify dist output exists
         run: |
