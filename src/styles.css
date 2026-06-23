@@ -153,14 +153,19 @@
   backdrop-filter: blur(24px) saturate(160%);
 }
 
-/* Subtle Islamic geometric pattern background */
+/* Sky gradient background with subtle Islamic geometric pattern */
 .pattern-bg {
   background-color: var(--color-background);
   background-image:
-    radial-gradient(ellipse at top right, color-mix(in oklab, var(--color-dawn-deep) 14%, transparent), transparent 55%),
-    radial-gradient(ellipse at bottom left, color-mix(in oklab, var(--color-dawn-deep) 9%, transparent), transparent 55%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 7.5L40 10l-7.5 2.5L30 20l-2.5-7.5L20 10l7.5-2.5L30 0zm0 40l2.5 7.5L40 50l-7.5 2.5L30 60l-2.5-7.5L20 50l7.5-2.5L30 40zM10 20l1.25 3.75L15 25l-3.75 1.25L10 30l-1.25-3.75L5 25l3.75-1.25L10 20zm40 0l1.25 3.75L55 25l-3.75 1.25L50 30l-1.25-3.75L45 25l3.75-1.25L50 20z' fill='%230ea5e9' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E");
+    linear-gradient(180deg, color-mix(in oklab, var(--primary) 22%, transparent) 0%, color-mix(in oklab, var(--primary) 6%, transparent) 38%, transparent 70%),
+    radial-gradient(ellipse at top right, color-mix(in oklab, var(--color-dawn-deep) 18%, transparent), transparent 55%),
+    radial-gradient(ellipse at bottom left, color-mix(in oklab, var(--color-dawn-deep) 10%, transparent), transparent 55%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 7.5L40 10l-7.5 2.5L30 20l-2.5-7.5L20 10l7.5-2.5L30 0zm0 40l2.5 7.5L40 50l-7.5 2.5L30 60l-2.5-7.5L20 50l7.5-2.5L30 40zM10 20l1.25 3.75L15 25l-3.75 1.25L10 30l-1.25-3.75L5 25l3.75-1.25L10 20zm40 0l1.25 3.75L55 25l-3.75 1.25L50 30l-1.25-3.75L45 25l3.75-1.25L50 20z' fill='%230ea5e9' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
+
+.bg-gradient-sky { background: var(--gradient-sky); }
+.bg-gradient-sky-soft { background: var(--gradient-sky-soft); }
+.shadow-sky { box-shadow: var(--shadow-sky); }
 
 /* Arabic numerals helper */
 .arabic-nums {
