@@ -28,4 +28,21 @@ export async function requestNativePermissions(): Promise<void> {
   } catch (err) {
     console.warn("[permissions] geolocation failed", err);
   }
+
+  // Android: "Display over other apps" (SYSTEM_ALERT_WINDOW) — required to
+  // float Azkar above other apps. We can only open the system settings page;
+  // the user must toggle it on manually.
+  try {
+    if (Capacitor.getPlatform() === "android") {
+      const { hasOverlayPermission, requestOverlayPermission } = await import(
+        "./native-overlay"
+      );
+      const granted = await hasOverlayPermission();
+      if (!granted) {
+        await requestOverlayPermission();
+      }
+    }
+  } catch (err) {
+    console.warn("[permissions] overlay failed", err);
+  }
 }
