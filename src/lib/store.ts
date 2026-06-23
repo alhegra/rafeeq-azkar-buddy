@@ -188,6 +188,8 @@ export const useAppStore = create<AppState>()(
         const ids = cur.ids.includes(id) ? cur.ids.filter((x) => x !== id) : [...cur.ids, id];
         set({ quickAzkar: { ...cur, ids } });
       },
+      setOverlayEnabled: (b) => set({ overlayEnabled: b }),
+
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
