@@ -17,16 +17,31 @@
 import { readdir, readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, relative } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const CLIENT = resolve(ROOT, "dist", "client");
 const SERVER = resolve(ROOT, "dist", "server");
 
-async function findFile(dir, predicate) {
-  const entries = await readdir(dir);
-  return entries.find(predicate);
+async function walk(dir, out = []) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return out;
+  }
+  for (const e of entries) {
+    const full = resolve(dir, e.name);
+    if (e.isDirectory()) await walk(full, out);
+    else out.push(full);
+  }
+  return out;
+}
+
+async function findManifestFile(dir) {
+  const files = await walk(dir);
+  return files.find((f) => /_tanstack-start-manifest_v-[^/]+\.(mjs|js)$/.test(f));
 }
 
 async function main() {
@@ -35,18 +50,20 @@ async function main() {
     process.exit(1);
   }
 
-  // 1. Find the TanStack Start manifest (its filename is hashed).
-  const manifestName = await findFile(SERVER, (n) =>
-    n.startsWith("_tanstack-start-manifest_v-") && n.endsWith(".mjs"),
-  );
-  if (!manifestName) {
-    console.error("Could not find TanStack Start manifest in dist/server/.");
+  // 1. Find the TanStack Start manifest. Its location/extension varies
+  // depending on whether the nitro post-build step ran (`.mjs` in
+  // `dist/server/`) or only the plain Vite SSR build (`.js` under
+  // `dist/server/assets/`). Walk recursively to handle both.
+  const manifestPath = await findManifestFile(SERVER);
+  if (!manifestPath) {
+    console.error("Could not find TanStack Start manifest under dist/server/.");
     process.exit(1);
   }
-  const manifestSrc = await readFile(resolve(SERVER, manifestName), "utf8");
+  console.log(`  manifest: ${relative(ROOT, manifestPath)}`);
+  const manifestSrc = await readFile(manifestPath, "utf8");
 
   // Extract clientEntry and the root route's preload list. We parse via regex
-  // to avoid importing the .mjs (it has runtime-only deps).
+  // to avoid importing the module (it has runtime-only deps).
   const clientEntryMatch = manifestSrc.match(/clientEntry:\s*"([^"]+)"/);
   if (!clientEntryMatch) {
     console.error("Could not parse clientEntry from manifest.");
@@ -54,15 +71,22 @@ async function main() {
   }
   const clientEntry = clientEntryMatch[1];
 
-  const rootMatch = manifestSrc.match(/__root__:\s*\{[^}]*preloads:\s*\[([^\]]*)\]/);
+  const rootMatch = manifestSrc.match(/__root__:\s*\{[^}]*?preloads:\s*\[([^\]]*)\]/);
   const rootPreloads = rootMatch
     ? Array.from(rootMatch[1].matchAll(/"([^"]+)"/g)).map((m) => m[1])
     : [];
 
-  // 2. Find the main CSS bundle.
+  // 2. Find the main CSS bundle (filename starts with "styles-" by Vite default).
   const assetsDir = resolve(CLIENT, "assets");
-  const cssName = await findFile(assetsDir, (n) => n.startsWith("styles-") && n.endsWith(".css"));
-  const cssHref = cssName ? `/assets/${cssName}` : null;
+  let cssHref = null;
+  if (existsSync(assetsDir)) {
+    const assetFiles = await readdir(assetsDir);
+    const cssName =
+      assetFiles.find((n) => n.startsWith("styles-") && n.endsWith(".css")) ||
+      assetFiles.find((n) => n.endsWith(".css"));
+    if (cssName) cssHref = `/assets/${cssName}`;
+  }
+
 
   // 3. Build the SPA HTML shell.
   const preloadTags = [clientEntry, ...rootPreloads]
