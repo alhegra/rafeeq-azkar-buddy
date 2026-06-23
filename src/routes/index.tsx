@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
+import { useEffect, useMemo, useState } from "react";
 import {
   Sun,
   Moon,
@@ -11,233 +11,245 @@ import {
   Compass,
   Clock,
   CircleDot,
-  ChevronLeft,
   Heart,
   TrendingUp,
+  Target,
+  HeartHandshake,
+  Headphones,
+  Flame,
+  Maximize2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
-import { AZKAR, CATEGORY_ORDER } from "@/lib/azkar-data";
 import { useAppStore } from "@/lib/store";
+import { getHijriDate, getGregorianDate } from "@/lib/hijri";
+import { getSmartSuggestions } from "@/lib/smart-suggestions";
+import { getActiveOccasions } from "@/lib/occasions";
+import { HasanatTree } from "@/components/hasanat-tree";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const ICONS = { Sun, Moon, BedDouble, Sunrise, Sparkles, Plane, Utensils };
-
-const TINTS: Record<string, string> = {
-  morning: "bg-amber-100/70 ring-amber-200/60 text-amber-700",
-  evening: "bg-indigo-100/70 ring-indigo-200/60 text-indigo-700",
-  sleep: "bg-violet-100/70 ring-violet-200/60 text-violet-700",
-  wakeup: "bg-rose-100/70 ring-rose-200/60 text-rose-700",
-  prayer: "bg-sky-100/80 ring-sky-200/60 text-sky-700",
-  travel: "bg-emerald-100/70 ring-emerald-200/60 text-emerald-700",
-  food: "bg-teal-100/70 ring-teal-200/60 text-teal-700",
+const SUGG_ICONS: Record<string, typeof Sun> = {
+  morning: Sun,
+  evening: Moon,
+  sleep: BedDouble,
+  salawat: Sparkles,
+  istighfar: Sunrise,
 };
 
 function useGreetingKey() {
   const h = new Date().getHours();
-  if (h < 12) return "morning";
-  if (h < 17) return "afternoon";
-  if (h < 20) return "evening";
-  return "night";
-}
-
-function useNextPrayer() {
-  // Static demo schedule; replaced by real calculation later.
-  const schedule = useMemo(
-    () => [
-      { key: "fajr", time: "05:12" },
-      { key: "sunrise", time: "06:38" },
-      { key: "dhuhr", time: "12:15" },
-      { key: "asr", time: "15:42" },
-      { key: "maghrib", time: "18:21" },
-      { key: "isha", time: "19:48" },
-    ],
-    [],
-  );
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000 * 30);
-    return () => clearInterval(id);
-  }, []);
-
-  const minutes = now.getHours() * 60 + now.getMinutes();
-  const next =
-    schedule.find((p) => {
-      const [h, m] = p.time.split(":").map(Number);
-      return h * 60 + m > minutes;
-    }) || schedule[0];
-  const [h, m] = next.time.split(":").map(Number);
-  let diff = h * 60 + m - minutes;
-  if (diff < 0) diff += 24 * 60;
-  const hh = Math.floor(diff / 60);
-  const mm = diff % 60;
-  return { ...next, remaining: `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}` };
+  if (h < 12) return "صباح الخير";
+  if (h < 17) return "نهارك مبارك";
+  if (h < 20) return "مساء الخير";
+  return "ليلة هانئة";
 }
 
 function HomePage() {
-  const { t } = useTranslation();
   const greeting = useGreetingKey();
-  const prayer = useNextPrayer();
   const lang = useAppStore((s) => s.language);
+  const streak = useAppStore((s) => s.streak);
+  const tasbeehToday = useAppStore((s) => s.getDailyCount("tasbeeh"));
+  const goal = useAppStore((s) => s.tasbeehGoal);
 
-  const featuredZikr = AZKAR.morning.azkar[0];
-  const ChevronEnd = lang === "ar" ? ChevronLeft : ChevronLeft;
-  void ChevronEnd;
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const suggestions = useMemo(() => getSmartSuggestions(now), [now]);
+  const occasions = useMemo(() => getActiveOccasions(now), [now]);
+  const hijri = useMemo(() => getHijriDate(now), [now]);
+  const greg = useMemo(() => getGregorianDate(now, lang), [now, lang]);
+
+  const dayPct = Math.min(100, Math.round((tasbeehToday / goal) * 100));
 
   return (
     <AppShell>
-      <div className="px-6 pt-12 space-y-7 animate-fade-up">
-        {/* Greeting */}
-        <header className="space-y-1.5">
-          <p className="text-sm text-muted-foreground">{t(`greeting.${greeting}`)}</p>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
-            {t("appName")}
+      <div className="px-5 pt-10 space-y-6 animate-fade-up">
+        {/* Greeting + dates */}
+        <header className="space-y-1">
+          <p className="text-xs text-muted-foreground">{greeting}</p>
+          <h1 className="font-display text-2xl font-bold text-ink leading-tight">
+            رفيق الذكر
           </h1>
-          <p className="text-sm text-muted-foreground">{t("tagline")}</p>
+          <div className="flex flex-wrap gap-x-2 text-[11px] text-muted-foreground arabic-nums">
+            <span>{hijri}</span>
+            <span>·</span>
+            <span>{greg}</span>
+          </div>
         </header>
 
-        {/* Next prayer card */}
-        <Link to="/prayer-times" className="block">
-          <div className="glass-card relative overflow-hidden rounded-3xl p-5 ring-1 ring-black/5 active:scale-[0.99] transition">
-            <div className="absolute -top-10 end-[-30px] size-32 rounded-full bg-primary/15 blur-3xl" />
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="space-y-1">
-                <span className="text-[11px] font-medium uppercase tracking-wider text-primary/80">
-                  {t("home.nextPrayer")}
-                </span>
-                <p className="font-display text-2xl font-semibold text-ink arabic-nums">
-                  {t(`prayer.${prayer.key}`)} · {prayer.time}
-                </p>
+        {/* Occasion banner */}
+        {occasions.length > 0 && (
+          <div className="space-y-2">
+            {occasions.map((o) => (
+              <div
+                key={o.id}
+                className="glass-card rounded-2xl p-4 ring-1 ring-amber-200/50 bg-gradient-to-l from-amber-100/40 to-transparent flex items-center gap-3"
+              >
+                <span className="text-2xl">{o.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-sm font-bold text-ink truncate">{o.label}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{o.description}</p>
+                </div>
               </div>
-              <div className="text-end">
-                <span className="text-[11px] text-muted-foreground">
-                  {t("home.remaining")}
-                </span>
-                <p className="font-display text-lg font-semibold arabic-nums text-ink">
-                  {prayer.remaining}
-                </p>
-              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Today progress + streak */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="glass-card rounded-3xl p-4 ring-1 ring-black/5">
+            <div className="flex items-center gap-2 text-primary mb-2">
+              <Target className="size-4" />
+              <span className="text-[11px] font-semibold">تقدم اليوم</span>
+            </div>
+            <p className="font-display text-2xl font-bold arabic-nums text-ink">
+              {tasbeehToday}<span className="text-sm text-muted-foreground">/{goal}</span>
+            </p>
+            <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-primary to-sky-400 transition-all" style={{ width: `${dayPct}%` }} />
             </div>
           </div>
+          <div className="glass-card rounded-3xl p-4 ring-1 ring-black/5">
+            <div className="flex items-center gap-2 text-orange-500 mb-2">
+              <Flame className="size-4" />
+              <span className="text-[11px] font-semibold">سلسلة الأيام</span>
+            </div>
+            <p className="font-display text-2xl font-bold arabic-nums text-ink">
+              {streak.current}<span className="text-sm text-muted-foreground"> يوم</span>
+            </p>
+            <p className="text-[11px] text-muted-foreground mt-2 arabic-nums">
+              الأطول: {streak.longest}
+            </p>
+          </div>
+        </div>
+
+        {/* Hasanat tree */}
+        <Link to="/tree" className="block glass-card rounded-3xl p-4 ring-1 ring-black/5 active:scale-[0.99] transition">
+          <HasanatTree compact />
         </Link>
 
-        {/* Categories */}
+        {/* Smart suggestions */}
         <section className="space-y-3">
           <div className="flex items-baseline justify-between px-1">
-            <h2 className="font-display text-base font-semibold text-ink">
-              {t("home.sectionAzkar")}
-            </h2>
-            <Link to="/azkar" className="text-xs font-medium text-primary">
-              {t("home.viewAll")}
-            </Link>
+            <h2 className="font-display text-base font-bold text-ink">مقترحات ذكية</h2>
+            <span className="text-[11px] text-muted-foreground">بناء على الوقت</span>
           </div>
-          <div className="grid grid-cols-2 gap-3.5">
-            {CATEGORY_ORDER.slice(0, 4).map((cid) => {
-              const cat = AZKAR[cid];
-              const Icon = ICONS[cat.icon as keyof typeof ICONS] ?? Sparkles;
+          <div className="space-y-2.5">
+            {suggestions.map((s) => {
+              const Icon = SUGG_ICONS[s.id] ?? Sparkles;
+              const linkProps = s.params
+                ? { to: s.to as "/azkar/$category", params: s.params }
+                : { to: s.to as "/tasbeeh" };
               return (
                 <Link
-                  key={cid}
-                  to="/azkar/$category"
-                  params={{ category: cid }}
-                  className="glass-card flex flex-col gap-3 rounded-3xl p-4 ring-1 ring-black/5 active:scale-[0.98] transition"
+                  key={s.id}
+                  {...linkProps}
+                  className="glass-card flex items-center gap-3 rounded-2xl p-4 ring-1 ring-black/5 active:scale-[0.99] transition"
                 >
-                  <span
-                    className={
-                      "flex size-11 items-center justify-center rounded-full ring-1 " +
-                      (TINTS[cid] ?? "bg-sky-100 ring-sky-200 text-sky-700")
-                    }
-                  >
-                    <Icon className="size-5" />
+                  <span className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary text-xl">
+                    {s.emoji}
                   </span>
-                  <div>
-                    <p className="font-display text-sm font-semibold text-ink">
-                      {t(`categories.${cid}`)}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 arabic-nums">
-                      {cat.azkar.length} ذكراً
-                    </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-sm font-bold text-ink truncate">{s.title}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{s.subtitle}</p>
                   </div>
+                  <span className="text-[10px] rounded-full bg-secondary px-2 py-1 text-muted-foreground shrink-0">
+                    {s.reason}
+                  </span>
+                  <Icon className="size-4 text-muted-foreground shrink-0" />
                 </Link>
               );
             })}
           </div>
         </section>
 
-        {/* Tools */}
+        {/* Quick access grid */}
         <section className="space-y-3">
-          <h2 className="font-display text-base font-semibold text-ink px-1">
-            {t("home.sectionTools")}
-          </h2>
-          <div className="grid grid-cols-3 gap-3">
-            <Link
-              to="/tasbeeh"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <CircleDot className="size-5 text-primary" />
-              <span className="text-[11px] font-medium">{t("tabs.tasbeeh")}</span>
-            </Link>
-            <Link
-              to="/qibla"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <Compass className="size-5 text-primary" />
-              <span className="text-[11px] font-medium">{t("tabs.qibla")}</span>
-            </Link>
-            <Link
-              to="/prayer-times"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <Clock className="size-5 text-primary" />
-              <span className="text-[11px] font-medium">{t("prayer.title")}</span>
-            </Link>
-            <Link
-              to="/favorites"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <Heart className="size-5 text-rose-500" />
-              <span className="text-[11px] font-medium">{t("favorites.title")}</span>
-            </Link>
-            <Link
-              to="/stats"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <TrendingUp className="size-5 text-sky-600" />
-              <span className="text-[11px] font-medium">{t("stats.title")}</span>
-            </Link>
-            <Link
-              to="/azkar"
-              className="glass-card flex flex-col items-center gap-2 rounded-3xl py-4 ring-1 ring-black/5 active:scale-[0.98] transition"
-            >
-              <Sparkles className="size-5 text-primary" />
-              <span className="text-[11px] font-medium">{t("tabs.azkar")}</span>
-            </Link>
+          <h2 className="font-display text-base font-bold text-ink px-1">أدواتي</h2>
+          <div className="grid grid-cols-4 gap-2.5">
+            <Tool to="/tasbeeh" icon={CircleDot} label="المسبحة" tint="bg-sky-100 text-sky-700" />
+            <Tool to="/azkar" icon={Sparkles} label="الأذكار" tint="bg-amber-100 text-amber-700" />
+            <Tool to="/mood" icon={HeartHandshake} label="شعوري" tint="bg-rose-100 text-rose-600" />
+            <Tool to="/audio" icon={Headphones} label="صوتيات" tint="bg-violet-100 text-violet-700" />
+            <Tool to="/goals" icon={Target} label="أهدافي" tint="bg-emerald-100 text-emerald-700" />
+            <Tool to="/focus" icon={Maximize2} label="تركيز" tint="bg-indigo-100 text-indigo-700" />
+            <Tool to="/qibla" icon={Compass} label="القبلة" tint="bg-teal-100 text-teal-700" />
+            <Tool to="/prayer-times" icon={Clock} label="الصلاة" tint="bg-sky-100 text-sky-700" />
+            <Tool to="/favorites" icon={Heart} label="المفضلة" tint="bg-pink-100 text-pink-600" />
+            <Tool to="/stats" icon={TrendingUp} label="إحصائيات" tint="bg-blue-100 text-blue-700" />
+            <Tool to="/search" icon={Sparkles} label="بحث" tint="bg-cyan-100 text-cyan-700" />
+            <Tool to="/settings" icon={Plane} label="إعدادات" tint="bg-slate-100 text-slate-700" />
           </div>
         </section>
 
-        {/* Current reading */}
+        {/* Categories shortcut */}
         <section className="space-y-3">
-          <h2 className="font-display text-base font-semibold text-ink px-1">
-            {t("home.currentReading")}
-          </h2>
-          <Link to="/azkar/$category" params={{ category: "morning" }}>
-            <div className="glass-card rounded-3xl p-6 ring-1 ring-black/5 text-center space-y-4 active:scale-[0.99] transition">
-              <p
-                className="font-body leading-loose text-ink"
-                style={{ fontSize: "1.15rem" }}
-              >
-                {featuredZikr.text}
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                {t("categories.morning")}
-              </p>
-            </div>
-          </Link>
+          <div className="flex items-baseline justify-between px-1">
+            <h2 className="font-display text-base font-bold text-ink">فئات الأذكار</h2>
+            <Link to="/azkar" className="text-xs font-medium text-primary">عرض الكل</Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Cat to="morning" label="أذكار الصباح" icon={<Sun className="size-5" />} tint="bg-amber-100/70 text-amber-700 ring-amber-200/60" />
+            <Cat to="evening" label="أذكار المساء" icon={<Moon className="size-5" />} tint="bg-indigo-100/70 text-indigo-700 ring-indigo-200/60" />
+            <Cat to="sleep" label="أذكار النوم" icon={<BedDouble className="size-5" />} tint="bg-violet-100/70 text-violet-700 ring-violet-200/60" />
+            <Cat to="food" label="أذكار الطعام" icon={<Utensils className="size-5" />} tint="bg-teal-100/70 text-teal-700 ring-teal-200/60" />
+          </div>
         </section>
       </div>
     </AppShell>
+  );
+}
+
+function Tool({
+  to,
+  icon: Icon,
+  label,
+  tint,
+}: {
+  to: string;
+  icon: typeof Sun;
+  label: string;
+  tint: string;
+}) {
+  return (
+    <Link
+      to={to as "/tasbeeh"}
+      className="glass-card flex flex-col items-center gap-2 rounded-2xl py-3.5 ring-1 ring-black/5 active:scale-95 transition"
+    >
+      <span className={"flex size-10 items-center justify-center rounded-full " + tint}>
+        <Icon className="size-4" />
+      </span>
+      <span className="text-[10px] font-semibold leading-tight">{label}</span>
+    </Link>
+  );
+}
+
+function Cat({
+  to,
+  label,
+  icon,
+  tint,
+}: {
+  to: string;
+  label: string;
+  icon: React.ReactNode;
+  tint: string;
+}) {
+  return (
+    <Link
+      to="/azkar/$category"
+      params={{ category: to }}
+      className="glass-card flex items-center gap-3 rounded-2xl p-4 ring-1 ring-black/5 active:scale-[0.98] transition"
+    >
+      <span className={"flex size-10 items-center justify-center rounded-full ring-1 " + tint}>
+        {icon}
+      </span>
+      <p className="font-display text-sm font-bold text-ink">{label}</p>
+    </Link>
   );
 }

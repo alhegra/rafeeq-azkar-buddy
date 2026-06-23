@@ -33,6 +33,32 @@ export function speakArabic(text: string, opts?: { rate?: number; pitch?: number
   }
 }
 
+export function stopSpeaking(): void {
+  if (!isSpeechSupported()) return;
+  try { window.speechSynthesis.cancel(); } catch { /* noop */ }
+}
+
+export function speak(text: string, opts?: { rate?: number; pitch?: number }): Promise<void> {
+  return new Promise((resolve) => {
+    if (!isSpeechSupported()) return resolve();
+    try {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "ar-SA";
+      utter.rate = opts?.rate ?? 0.95;
+      utter.pitch = opts?.pitch ?? 1.0;
+      const v = pickArabicVoice();
+      if (v) utter.voice = v;
+      utter.onend = () => resolve();
+      utter.onerror = () => resolve();
+      synth.speak(utter);
+    } catch {
+      resolve();
+    }
+  });
+}
+
 // Preload voices (some browsers populate the list asynchronously).
 if (typeof window !== "undefined" && "speechSynthesis" in window) {
   try {

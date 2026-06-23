@@ -15,7 +15,11 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as QiblaRouteImport } from './routes/qibla'
 import { Route as PrayerTimesRouteImport } from './routes/prayer-times'
+import { Route as MoodRouteImport } from './routes/mood'
+import { Route as GoalsRouteImport } from './routes/goals'
+import { Route as FocusRouteImport } from './routes/focus'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as AudioRouteImport } from './routes/audio'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AzkarIndexRouteImport } from './routes/azkar.index'
 import { Route as AzkarCategoryRouteImport } from './routes/azkar.$category'
@@ -50,9 +54,29 @@ const PrayerTimesRoute = PrayerTimesRouteImport.update({
   path: '/prayer-times',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MoodRoute = MoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GoalsRoute = GoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusRoute = FocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AudioRoute = AudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,7 +97,11 @@ const AzkarCategoryRoute = AzkarCategoryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audio': typeof AudioRoute
   '/favorites': typeof FavoritesRoute
+  '/focus': typeof FocusRoute
+  '/goals': typeof GoalsRoute
+  '/mood': typeof MoodRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
   '/search': typeof SearchRoute
@@ -85,7 +113,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audio': typeof AudioRoute
   '/favorites': typeof FavoritesRoute
+  '/focus': typeof FocusRoute
+  '/goals': typeof GoalsRoute
+  '/mood': typeof MoodRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
   '/search': typeof SearchRoute
@@ -98,7 +130,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audio': typeof AudioRoute
   '/favorites': typeof FavoritesRoute
+  '/focus': typeof FocusRoute
+  '/goals': typeof GoalsRoute
+  '/mood': typeof MoodRoute
   '/prayer-times': typeof PrayerTimesRoute
   '/qibla': typeof QiblaRoute
   '/search': typeof SearchRoute
@@ -112,7 +148,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/audio'
     | '/favorites'
+    | '/focus'
+    | '/goals'
+    | '/mood'
     | '/prayer-times'
     | '/qibla'
     | '/search'
@@ -124,7 +164,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/audio'
     | '/favorites'
+    | '/focus'
+    | '/goals'
+    | '/mood'
     | '/prayer-times'
     | '/qibla'
     | '/search'
@@ -136,7 +180,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/audio'
     | '/favorites'
+    | '/focus'
+    | '/goals'
+    | '/mood'
     | '/prayer-times'
     | '/qibla'
     | '/search'
@@ -149,7 +197,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AudioRoute: typeof AudioRoute
   FavoritesRoute: typeof FavoritesRoute
+  FocusRoute: typeof FocusRoute
+  GoalsRoute: typeof GoalsRoute
+  MoodRoute: typeof MoodRoute
   PrayerTimesRoute: typeof PrayerTimesRoute
   QiblaRoute: typeof QiblaRoute
   SearchRoute: typeof SearchRoute
@@ -204,11 +256,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrayerTimesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mood': {
+      id: '/mood'
+      path: '/mood'
+      fullPath: '/mood'
+      preLoaderRoute: typeof MoodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/goals': {
+      id: '/goals'
+      path: '/goals'
+      fullPath: '/goals'
+      preLoaderRoute: typeof GoalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/focus': {
+      id: '/focus'
+      path: '/focus'
+      fullPath: '/focus'
+      preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/favorites': {
       id: '/favorites'
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audio': {
+      id: '/audio'
+      path: '/audio'
+      fullPath: '/audio'
+      preLoaderRoute: typeof AudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -237,7 +317,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AudioRoute: AudioRoute,
   FavoritesRoute: FavoritesRoute,
+  FocusRoute: FocusRoute,
+  GoalsRoute: GoalsRoute,
+  MoodRoute: MoodRoute,
   PrayerTimesRoute: PrayerTimesRoute,
   QiblaRoute: QiblaRoute,
   SearchRoute: SearchRoute,
