@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { pushSchedule, type ReminderItem } from "@/lib/reminders-bridge";
 import { AZKAR } from "@/lib/azkar-data";
+import { QUICK_AZKAR } from "@/lib/quick-azkar";
+import { speakArabic } from "@/lib/speech";
 
 function nextOccurrence(hhmm: string): number {
   const [h, m] = hhmm.split(":").map(Number);
@@ -26,6 +28,7 @@ export function useReminders() {
   const reminders = useAppStore((s) => s.reminders);
   const ambientEnabled = useAppStore((s) => s.ambientEnabled);
   const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
+  const quickAzkar = useAppStore((s) => s.quickAzkar);
 
   // In-page fallback: when the app IS open and SW isn't available (preview/dev),
   // we still fire local Notification instances for the daily ones.
@@ -60,6 +63,29 @@ export function useReminders() {
     return () => { timers.forEach((t) => clearTimeout(t)); };
   }, [reminders.morningEnabled, reminders.morningTime, reminders.eveningEnabled, reminders.eveningTime]);
 
+  // In-page voice playback for quick azkar (fires while app is open, regardless of SW)
+  useEffect(() => {
+    if (!quickAzkar.enabled || !quickAzkar.voice) return;
+    if (typeof window === "undefined") return;
+    const pool = QUICK_AZKAR.filter((q) => quickAzkar.ids.includes(q.id));
+    if (!pool.length) return;
+    const intervalMs = Math.max(1, quickAzkar.intervalMin) * 60 * 1000;
+    const tick = () => {
+      const h = new Date().getHours();
+      const inWindow =
+        quickAzkar.fromHour === quickAzkar.toHour ||
+        (quickAzkar.fromHour < quickAzkar.toHour
+          ? h >= quickAzkar.fromHour && h < quickAzkar.toHour
+          : h >= quickAzkar.fromHour || h < quickAzkar.toHour);
+      if (inWindow && document.visibilityState === "visible") {
+        const p = pool[Math.floor(Math.random() * pool.length)];
+        speakArabic(p.speak);
+      }
+    };
+    const id = window.setInterval(tick, intervalMs);
+    return () => window.clearInterval(id);
+  }, [quickAzkar.enabled, quickAzkar.voice, quickAzkar.intervalMin, quickAzkar.ids, quickAzkar.fromHour, quickAzkar.toHour]);
+
   // SW path: works while app is closed (after PWA install).
   useEffect(() => {
     const items: ReminderItem[] = [];
@@ -91,6 +117,22 @@ export function useReminders() {
         picks: buildAmbientPicks(),
       });
     }
+    if (quickAzkar.enabled) {
+      const picks = QUICK_AZKAR
+        .filter((q) => quickAzkar.ids.includes(q.id))
+        .map((q) => ({ text: q.text, speak: q.speak, emoji: q.emoji }));
+      if (picks.length) {
+        items.push({
+          id: "quick",
+          kind: "quick",
+          intervalMin: Math.max(1, quickAzkar.intervalMin),
+          voice: quickAzkar.voice,
+          fromHour: quickAzkar.fromHour,
+          toHour: quickAzkar.toHour,
+          picks,
+        });
+      }
+    }
     void pushSchedule(items);
   }, [
     reminders.morningEnabled,
@@ -99,6 +141,12 @@ export function useReminders() {
     reminders.eveningTime,
     ambientEnabled,
     ambientIntervalMin,
+    quickAzkar.enabled,
+    quickAzkar.intervalMin,
+    quickAzkar.voice,
+    quickAzkar.ids,
+    quickAzkar.fromHour,
+    quickAzkar.toHour,
   ]);
 }
 

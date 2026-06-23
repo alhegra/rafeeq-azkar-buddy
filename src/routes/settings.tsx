@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
 import { sendTestNotification } from "@/lib/reminders-bridge";
+import { speakArabic, isSpeechSupported } from "@/lib/speech";
+import { QUICK_AZKAR } from "@/lib/quick-azkar";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
@@ -35,6 +37,9 @@ function SettingsPage() {
   const setAmbientEnabled = useAppStore((s) => s.setAmbientEnabled);
   const ambientIntervalMin = useAppStore((s) => s.ambientIntervalMin);
   const setAmbientIntervalMin = useAppStore((s) => s.setAmbientIntervalMin);
+  const quickAzkar = useAppStore((s) => s.quickAzkar);
+  const setQuickAzkar = useAppStore((s) => s.setQuickAzkar);
+  const toggleQuickId = useAppStore((s) => s.toggleQuickId);
 
   // PWA install
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
@@ -283,6 +288,120 @@ function SettingsPage() {
             {t("settings.ambientHint")}
           </p>
         </Section>
+
+        {/* Quick periodic azkar reminders with voice */}
+        <Section title="التذكيرات السريعة بالصوت">
+          <Row icon={<Repeat className="size-5" />} label="تفعيل التذكيرات السريعة">
+            <Toggle
+              on={quickAzkar.enabled}
+              onChange={async () => {
+                const turningOn = !quickAzkar.enabled;
+                if (turningOn) {
+                  const ok = await requestNotificationPermission();
+                  if (!ok) {
+                    toast.error(t("settings.permissionDenied"));
+                    return;
+                  }
+                }
+                setQuickAzkar({ enabled: turningOn });
+              }}
+            />
+          </Row>
+
+          {quickAzkar.enabled && (
+            <>
+              <Row icon={<Mic className="size-5" />} label="نطق الذكر بالصوت">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      if (!isSpeechSupported()) {
+                        toast.error("المتصفح لا يدعم النطق الصوتي");
+                        return;
+                      }
+                      speakArabic("اللهم صل وسلم على نبينا محمد");
+                    }}
+                    className="rounded-full bg-muted px-3 py-1 text-[11px] font-medium text-ink active:scale-95"
+                  >
+                    تجربة
+                  </button>
+                  <Toggle on={quickAzkar.voice} onChange={() => setQuickAzkar({ voice: !quickAzkar.voice })} />
+                </div>
+              </Row>
+
+              <Row icon={<Bell className="size-5" />} label="كل (دقيقة)">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setQuickAzkar({ intervalMin: Math.max(5, quickAzkar.intervalMin - 5) })}
+                    className="size-8 rounded-full bg-muted text-ink font-bold active:scale-95"
+                  >−</button>
+                  <span className="w-12 text-center text-sm font-semibold arabic-nums">{quickAzkar.intervalMin}</span>
+                  <button
+                    onClick={() => setQuickAzkar({ intervalMin: Math.min(360, quickAzkar.intervalMin + 5) })}
+                    className="size-8 rounded-full bg-muted text-ink font-bold active:scale-95"
+                  >+</button>
+                </div>
+              </Row>
+
+              <Row icon={<Sunrise className="size-5" />} label="فعّالة بين الساعتين">
+                <div className="flex items-center gap-1.5 arabic-nums text-xs">
+                  <input
+                    type="number" min={0} max={23}
+                    value={quickAzkar.fromHour}
+                    onChange={(e) => setQuickAzkar({ fromHour: Math.max(0, Math.min(23, Number(e.target.value) || 0)) })}
+                    className="w-12 rounded-lg bg-muted px-2 py-1 text-center outline-none"
+                  />
+                  <span className="text-muted-foreground">→</span>
+                  <input
+                    type="number" min={0} max={23}
+                    value={quickAzkar.toHour}
+                    onChange={(e) => setQuickAzkar({ toHour: Math.max(0, Math.min(23, Number(e.target.value) || 0)) })}
+                    className="w-12 rounded-lg bg-muted px-2 py-1 text-center outline-none"
+                  />
+                </div>
+              </Row>
+
+              <div className="space-y-2">
+                <p className="px-1 text-[11px] font-semibold text-muted-foreground">اختر الأذكار:</p>
+                <div className="grid grid-cols-1 gap-2">
+                  {QUICK_AZKAR.map((q) => {
+                    const on = quickAzkar.ids.includes(q.id);
+                    return (
+                      <button
+                        key={q.id}
+                        onClick={() => toggleQuickId(q.id)}
+                        className={
+                          "glass-card flex items-center gap-3 rounded-2xl p-3 text-right transition active:scale-[0.98] " +
+                          (on ? "ring-2 ring-primary" : "ring-1 ring-black/5 opacity-70")
+                        }
+                      >
+                        <span className="text-2xl">{q.emoji}</span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-sm font-semibold text-ink">{q.label}</span>
+                          <span className="block truncate text-[11px] text-muted-foreground">{q.text}</span>
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            speakArabic(q.speak);
+                          }}
+                          className="shrink-0 rounded-full bg-primary/10 p-2 text-primary"
+                          aria-label="نطق"
+                        >
+                          <Volume2 className="size-4" />
+                        </button>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+          <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+            تظهر إشعارات بالأذكار المختارة بشكل دوري حتى لو كان التطبيق مغلقاً. عند الضغط على الإشعار يُفتح التطبيق ويُنطق الذكر صوتياً.
+          </p>
+        </Section>
+
+
 
 
         {/* About */}

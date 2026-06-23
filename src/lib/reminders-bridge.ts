@@ -13,7 +13,16 @@ export type ReminderItem =
       id: string;
       kind: "ambient";
       intervalMin: number;
-      picks: { text: string; reference?: string }[];
+      picks: { text: string; reference?: string; speak?: string }[];
+    }
+  | {
+      id: string;
+      kind: "quick";
+      intervalMin: number;
+      voice: boolean;
+      fromHour: number;
+      toHour: number;
+      picks: { text: string; speak: string; emoji?: string }[];
     };
 
 async function postToSW(msg: unknown): Promise<boolean> {

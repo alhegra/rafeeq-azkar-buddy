@@ -17,6 +17,15 @@ export interface Reminders {
   eveningTime: string;
 }
 
+export interface QuickAzkarSettings {
+  enabled: boolean;
+  ids: string[]; // enabled quick-zikr ids
+  intervalMin: number; // minutes between pings
+  voice: boolean; // speak with TTS when opened
+  fromHour: number; // 0..23 — active window start
+  toHour: number;   // 0..23 — active window end
+}
+
 interface AppState {
   // Settings
   language: Language;
@@ -26,9 +35,12 @@ interface AppState {
   sound: boolean;
   reminders: Reminders;
 
-  // Ambient zikr bubble
+  // Ambient zikr bubble (in-app)
   ambientEnabled: boolean;
   ambientIntervalMin: number; // minutes between bubbles
+
+  // Quick periodic azkar reminders (system notifications)
+  quickAzkar: QuickAzkarSettings;
 
   // Favorites
   favorites: string[]; // zikr ids: `${categoryId}:${zikrId}`
@@ -54,6 +66,8 @@ interface AppState {
   setReminders: (r: Partial<Reminders>) => void;
   setAmbientEnabled: (b: boolean) => void;
   setAmbientIntervalMin: (n: number) => void;
+  setQuickAzkar: (q: Partial<QuickAzkarSettings>) => void;
+  toggleQuickId: (id: string) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
@@ -98,6 +112,14 @@ export const useAppStore = create<AppState>()(
       },
       ambientEnabled: true,
       ambientIntervalMin: 8,
+      quickAzkar: {
+        enabled: false,
+        ids: ["salah_nabi", "istighfar", "subhan_hamd"],
+        intervalMin: 30,
+        voice: true,
+        fromHour: 7,
+        toHour: 23,
+      },
       favorites: [],
       progress: {},
       tasbeehCount: 0,
@@ -114,6 +136,12 @@ export const useAppStore = create<AppState>()(
       setReminders: (r) => set({ reminders: { ...get().reminders, ...r } }),
       setAmbientEnabled: (b) => set({ ambientEnabled: b }),
       setAmbientIntervalMin: (n) => set({ ambientIntervalMin: Math.max(1, Math.min(120, n)) }),
+      setQuickAzkar: (q) => set({ quickAzkar: { ...get().quickAzkar, ...q } }),
+      toggleQuickId: (id) => {
+        const cur = get().quickAzkar;
+        const ids = cur.ids.includes(id) ? cur.ids.filter((x) => x !== id) : [...cur.ids, id];
+        set({ quickAzkar: { ...cur, ids } });
+      },
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
