@@ -44,36 +44,40 @@
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 1rem;
 
-  /* Brand palette — Dawn Glassmorphism */
-  --dawn-sky: oklch(0.975 0.018 230);
-  --dawn-deep: oklch(0.68 0.13 230);
-  --dawn-deep-soft: oklch(0.88 0.06 230);
-  --marble: oklch(0.985 0.006 230);
-  --ink: oklch(0.32 0.07 240);
-  --ink-soft: oklch(0.55 0.05 240);
+  /* Brand palette — Sky to White gradient */
+  --dawn-sky: oklch(0.97 0.03 230);
+  --dawn-deep: oklch(0.72 0.16 235);
+  --dawn-deep-soft: oklch(0.86 0.09 230);
+  --marble: oklch(0.99 0.005 230);
+  --ink: oklch(0.28 0.08 245);
+  --ink-soft: oklch(0.52 0.06 240);
 
   /* Semantic */
-  --background: oklch(0.98 0.012 230);
-  --foreground: oklch(0.32 0.07 240);
+  --background: oklch(0.99 0.008 230);
+  --foreground: oklch(0.28 0.08 245);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.32 0.07 240);
+  --card-foreground: oklch(0.28 0.08 245);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.32 0.07 240);
-  --primary: oklch(0.68 0.13 230);
+  --popover-foreground: oklch(0.28 0.08 245);
+  --primary: oklch(0.72 0.16 235);
   --primary-foreground: oklch(0.99 0.005 230);
-  --secondary: oklch(0.96 0.012 230);
-  --secondary-foreground: oklch(0.32 0.07 240);
-  --muted: oklch(0.96 0.012 230);
-  --muted-foreground: oklch(0.55 0.05 240);
-  --accent: oklch(0.94 0.025 230);
-  --accent-foreground: oklch(0.32 0.07 240);
+  --secondary: oklch(0.96 0.02 230);
+  --secondary-foreground: oklch(0.28 0.08 245);
+  --muted: oklch(0.96 0.02 230);
+  --muted-foreground: oklch(0.52 0.06 240);
+  --accent: oklch(0.93 0.04 230);
+  --accent-foreground: oklch(0.28 0.08 245);
   --destructive: oklch(0.62 0.21 25);
   --destructive-foreground: oklch(0.99 0.003 0);
-  --border: oklch(0.92 0.015 230);
-  --input: oklch(0.92 0.015 230);
-  --ring: oklch(0.68 0.13 230);
+  --border: oklch(0.91 0.025 230);
+  --input: oklch(0.91 0.025 230);
+  --ring: oklch(0.72 0.16 235);
+
+  --gradient-sky: linear-gradient(160deg, oklch(0.78 0.14 230) 0%, oklch(0.92 0.07 225) 45%, oklch(0.99 0.008 230) 100%);
+  --gradient-sky-soft: linear-gradient(180deg, oklch(0.96 0.04 230) 0%, oklch(0.99 0.008 230) 100%);
+  --shadow-sky: 0 18px 50px -20px color-mix(in oklab, var(--primary) 45%, transparent);
 
   --font-display: 'Reem Kufi', 'Noto Naskh Arabic', system-ui, sans-serif;
   --font-body: 'Noto Naskh Arabic', 'Inter', system-ui, sans-serif;
