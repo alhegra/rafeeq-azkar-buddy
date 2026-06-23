@@ -83,6 +83,7 @@ interface AppState {
   setAmbientIntervalMin: (n: number) => void;
   setQuickAzkar: (q: Partial<QuickAzkarSettings>) => void;
   toggleQuickId: (id: string) => void;
+  setOverlayEnabled: (b: boolean) => void;
 
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
