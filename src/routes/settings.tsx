@@ -462,6 +462,42 @@ function SettingsPage() {
 
 
 
+        {/* Floating overlay (Android only) */}
+        {onAndroid && (
+          <Section title="الإظهار فوق التطبيقات">
+            <Row icon={<Layers className="size-5" />} label={overlayGranted ? "الإذن ممنوح ✓" : "طلب إذن «الإظهار فوق التطبيقات»"}>
+              {!overlayGranted && (
+                <button
+                  onClick={async () => {
+                    await requestOverlayPermission();
+                    toast.message("فعّل الإذن من الإعدادات ثم ارجع للتطبيق", { duration: 5000 });
+                  }}
+                  className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground active:scale-95"
+                >
+                  فتح الإعدادات
+                </button>
+              )}
+            </Row>
+
+            <Row icon={<Sparkles className="size-5" />} label="إظهار الأذكار فوق أي تطبيق">
+              <Toggle on={overlayEnabled} onChange={handleOverlayToggle} />
+            </Row>
+
+            <Row icon={<Send className="size-5" />} label="معاينة فورية">
+              <button
+                onClick={handleOverlayPreview}
+                className="rounded-full bg-muted px-4 py-1.5 text-xs font-medium text-ink active:scale-95"
+              >
+                عرض الآن
+              </button>
+            </Row>
+
+            <p className="px-1 text-[11px] text-muted-foreground leading-relaxed">
+              يستخدم نافذة عائمة حقيقية (System Overlay) لإظهار الأذكار فوق أي تطبيق آخر — حتى لو كان «رفيق أذكار» مغلقاً. يتم اختيار الأذكار من قائمة «التذكيرات السريعة» بالأعلى، ووفق الفترة الزمنية المُعدّة فيها.
+            </p>
+          </Section>
+        )}
+
         {/* About */}
         <Section title={t("settings.about")}>
           <Row icon={<Info className="size-5" />} label={t("appName")}>
