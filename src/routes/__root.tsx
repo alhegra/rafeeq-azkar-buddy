@@ -15,6 +15,7 @@ import "../lib/i18n";
 import { useAppStore } from "../lib/store";
 import { useReminders } from "../hooks/use-reminders";
 import { AmbientZikr } from "../components/ambient-zikr";
+import { SpeakOnLoad } from "../components/speak-on-load";
 
 import { Toaster } from "sonner";
 
