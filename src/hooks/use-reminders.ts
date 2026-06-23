@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { pushSchedule, type ReminderItem } from "@/lib/reminders-bridge";
 import { AZKAR } from "@/lib/azkar-data";
+import { QUICK_AZKAR } from "@/lib/quick-azkar";
+import { speakArabic } from "@/lib/speech";
 
 function nextOccurrence(hhmm: string): number {
   const [h, m] = hhmm.split(":").map(Number);
