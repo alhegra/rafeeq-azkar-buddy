@@ -55,6 +55,8 @@ interface AppState {
 
   quickAzkar: QuickAzkarSettings;
 
+  overlayEnabled: boolean;
+
   favorites: string[];
   progress: Record<string, Record<string, number>>;
 
