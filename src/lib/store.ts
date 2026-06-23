@@ -136,6 +136,12 @@ export const useAppStore = create<AppState>()(
       setReminders: (r) => set({ reminders: { ...get().reminders, ...r } }),
       setAmbientEnabled: (b) => set({ ambientEnabled: b }),
       setAmbientIntervalMin: (n) => set({ ambientIntervalMin: Math.max(1, Math.min(120, n)) }),
+      setQuickAzkar: (q) => set({ quickAzkar: { ...get().quickAzkar, ...q } }),
+      toggleQuickId: (id) => {
+        const cur = get().quickAzkar;
+        const ids = cur.ids.includes(id) ? cur.ids.filter((x) => x !== id) : [...cur.ids, id];
+        set({ quickAzkar: { ...cur, ids } });
+      },
 
       toggleFavorite: (id) => {
         const favs = get().favorites;
