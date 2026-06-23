@@ -48,6 +48,56 @@ function SettingsPage() {
   const quickAzkar = useAppStore((s) => s.quickAzkar);
   const setQuickAzkar = useAppStore((s) => s.setQuickAzkar);
   const toggleQuickId = useAppStore((s) => s.toggleQuickId);
+  const overlayEnabled = useAppStore((s) => s.overlayEnabled);
+  const setOverlayEnabled = useAppStore((s) => s.setOverlayEnabled);
+
+  const [overlayGranted, setOverlayGranted] = useState(false);
+  const onAndroid = isAndroidNative();
+
+  useEffect(() => {
+    if (!onAndroid) return;
+    void hasOverlayPermission().then(setOverlayGranted);
+    const onVis = () => {
+      if (document.visibilityState === "visible") {
+        void hasOverlayPermission().then(setOverlayGranted);
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [onAndroid]);
+
+  const handleOverlayToggle = async () => {
+    const turningOn = !overlayEnabled;
+    if (turningOn) {
+      const granted = await hasOverlayPermission();
+      if (!granted) {
+        await requestOverlayPermission();
+        toast.message("افتح إذن «الإظهار فوق التطبيقات الأخرى» من الإعدادات ثم عد للتطبيق", {
+          duration: 6000,
+        });
+        return;
+      }
+      await startOverlaySchedule({
+        azkar: QUICK_AZKAR.filter((q) => quickAzkar.ids.includes(q.id)).map((q) => q.text),
+        intervalMin: quickAzkar.intervalMin,
+        fromHour: quickAzkar.fromHour,
+        toHour: quickAzkar.toHour,
+      });
+      toast.success("تم تفعيل الإظهار فوق التطبيقات");
+    } else {
+      await stopOverlaySchedule();
+    }
+    setOverlayEnabled(turningOn);
+  };
+
+  const handleOverlayPreview = async () => {
+    const granted = await hasOverlayPermission();
+    if (!granted) {
+      await requestOverlayPermission();
+      return;
+    }
+    await showZikrOverlay("سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", 6000);
+  };
 
   // PWA install
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
