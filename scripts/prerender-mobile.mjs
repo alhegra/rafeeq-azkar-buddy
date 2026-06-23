@@ -1,86 +1,116 @@
 #!/usr/bin/env node
 /**
- * Prepare a static SPA bundle for Capacitor (Android/iOS) from a TanStack
- * Start build. We:
- *   1. Spawn the Nitro production server (.output/server/index.mjs)
- *   2. Fetch "/" to capture the SSR-rendered HTML shell
- *   3. Copy .output/public/* into dist/client/
- *   4. Save the captured HTML as dist/client/index.html
+ * Prepare a static SPA shell for Capacitor (Android/iOS) from a TanStack Start
+ * Vite build. The Vite build produces `dist/client/` (static assets) and
+ * `dist/server/` (a Cloudflare Worker module — not runnable under Node), so we
+ * cannot spawn the production server inside the WebView.
  *
- * After that, TanStack Router takes over on the client for all routes.
+ * Instead we:
+ *   1. Read the TanStack Start manifest from `dist/server/` to discover the
+ *      client entry and root preloads (hashed per build).
+ *   2. Find the built CSS bundle in `dist/client/assets/`.
+ *   3. Write a minimal RTL HTML shell at `dist/client/index.html` that boots
+ *      the SPA — the TanStack Router takes over on the client for every route.
+ *   4. Duplicate that shell under `dist/client/<route>/index.html` so deep
+ *      links resolve inside the WebView.
  */
-import { spawn } from "node:child_process";
-import { cp, mkdir, writeFile, rm, stat } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const OUTPUT = resolve(ROOT, ".output");
-const PUBLIC_DIR = resolve(OUTPUT, "public");
-const SERVER_ENTRY = resolve(OUTPUT, "server", "index.mjs");
-const DEST = resolve(ROOT, "dist", "client");
-const PORT = process.env.PRERENDER_PORT || "3939";
+const CLIENT = resolve(ROOT, "dist", "client");
+const SERVER = resolve(ROOT, "dist", "server");
 
-async function waitFor(url, attempts = 40, delayMs = 250) {
-  for (let i = 0; i < attempts; i++) {
-    try {
-      const r = await fetch(url);
-      if (r.ok || r.status === 404) return;
-    } catch { /* not ready */ }
-    await new Promise((r) => setTimeout(r, delayMs));
-  }
-  throw new Error(`Server at ${url} did not start in time`);
+async function findFile(dir, predicate) {
+  const entries = await readdir(dir);
+  return entries.find(predicate);
 }
 
 async function main() {
-  if (!existsSync(PUBLIC_DIR)) {
-    console.error(`Missing ${PUBLIC_DIR}. Run "npm run build" first.`);
-    process.exit(1);
-  }
-  if (!existsSync(SERVER_ENTRY)) {
-    console.error(`Missing ${SERVER_ENTRY}. Run "npm run build" first.`);
+  if (!existsSync(CLIENT) || !existsSync(SERVER)) {
+    console.error(`Missing dist/client or dist/server. Run "bun run build" first.`);
     process.exit(1);
   }
 
-  await rm(DEST, { recursive: true, force: true });
-  await mkdir(DEST, { recursive: true });
-
-  console.log("→ Copying .output/public → dist/client");
-  await cp(PUBLIC_DIR, DEST, { recursive: true });
-
-  console.log(`→ Starting Nitro server on port ${PORT}`);
-  const proc = spawn(process.execPath, [SERVER_ENTRY], {
-    env: { ...process.env, PORT, HOST: "127.0.0.1", NITRO_PORT: PORT },
-    stdio: ["ignore", "inherit", "inherit"],
-  });
-
-  let html = "";
-  try {
-    await waitFor(`http://127.0.0.1:${PORT}/`);
-    console.log("→ Fetching SSR HTML for /");
-    const res = await fetch(`http://127.0.0.1:${PORT}/`);
-    html = await res.text();
-  } finally {
-    proc.kill("SIGTERM");
+  // 1. Find the TanStack Start manifest (its filename is hashed).
+  const manifestName = await findFile(SERVER, (n) =>
+    n.startsWith("_tanstack-start-manifest_v-") && n.endsWith(".mjs"),
+  );
+  if (!manifestName) {
+    console.error("Could not find TanStack Start manifest in dist/server/.");
+    process.exit(1);
   }
+  const manifestSrc = await readFile(resolve(SERVER, manifestName), "utf8");
 
-  // Strip any hard-coded origin / absolute URLs that point at the dev/preview host.
-  html = html.replace(/https?:\/\/[^"'\s/]+\/(?=assets\/|_build\/|icon-|favicon|manifest)/g, "/");
+  // Extract clientEntry and the root route's preload list. We parse via regex
+  // to avoid importing the .mjs (it has runtime-only deps).
+  const clientEntryMatch = manifestSrc.match(/clientEntry:\s*"([^"]+)"/);
+  if (!clientEntryMatch) {
+    console.error("Could not parse clientEntry from manifest.");
+    process.exit(1);
+  }
+  const clientEntry = clientEntryMatch[1];
 
-  await writeFile(resolve(DEST, "index.html"), html, "utf8");
+  const rootMatch = manifestSrc.match(/__root__:\s*\{[^}]*preloads:\s*\[([^\]]*)\]/);
+  const rootPreloads = rootMatch
+    ? Array.from(rootMatch[1].matchAll(/"([^"]+)"/g)).map((m) => m[1])
+    : [];
 
-  // Also write the same HTML as a SPA fallback so any deep link inside the
-  // WebView (e.g. /settings) resolves to the client-side router.
-  for (const route of ["settings", "azkar", "favorites", "search", "stats", "tasbeeh", "qibla", "prayer-times"]) {
-    const dir = resolve(DEST, route);
+  // 2. Find the main CSS bundle.
+  const assetsDir = resolve(CLIENT, "assets");
+  const cssName = await findFile(assetsDir, (n) => n.startsWith("styles-") && n.endsWith(".css"));
+  const cssHref = cssName ? `/assets/${cssName}` : null;
+
+  // 3. Build the SPA HTML shell.
+  const preloadTags = [clientEntry, ...rootPreloads]
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .map((href) => `    <link rel="modulepreload" href="${href}" />`)
+    .join("\n");
+
+  const html = `<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c4a6e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>رفيق أذكار — Rafeeq Azkar</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+${cssHref ? `    <link rel="stylesheet" href="${cssHref}" />\n` : ""}${preloadTags}
+    <script type="module" src="${clientEntry}"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
+
+  await writeFile(resolve(CLIENT, "index.html"), html, "utf8");
+
+  // 4. SPA fallbacks for deep links inside the WebView.
+  const routes = [
+    "settings", "azkar", "favorites", "search", "stats", "tasbeeh",
+    "qibla", "prayer-times", "audio", "focus", "goals", "mood", "tree",
+  ];
+  for (const route of routes) {
+    const dir = resolve(CLIENT, route);
     await mkdir(dir, { recursive: true });
     await writeFile(resolve(dir, "index.html"), html, "utf8");
   }
 
-  const s = await stat(resolve(DEST, "index.html"));
-  console.log(`✓ Wrote dist/client/index.html (${s.size} bytes) + SPA fallbacks`);
+  const s = await stat(resolve(CLIENT, "index.html"));
+  console.log(`✓ Wrote dist/client/index.html (${s.size} bytes)`);
+  console.log(`  clientEntry: ${clientEntry}`);
+  console.log(`  rootPreloads: ${rootPreloads.length}`);
+  console.log(`  css: ${cssHref ?? "(none)"}`);
+  console.log(`  SPA fallbacks: ${routes.length}`);
 }
 
 main().catch((err) => {
