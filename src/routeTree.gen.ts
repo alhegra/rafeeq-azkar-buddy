@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TreeRouteImport } from './routes/tree'
 import { Route as TasbeehRouteImport } from './routes/tasbeeh'
 import { Route as StatsRouteImport } from './routes/stats'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -24,6 +25,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AzkarIndexRouteImport } from './routes/azkar.index'
 import { Route as AzkarCategoryRouteImport } from './routes/azkar.$category'
 
+const TreeRoute = TreeRouteImport.update({
+  id: '/tree',
+  path: '/tree',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TasbeehRoute = TasbeehRouteImport.update({
   id: '/tasbeeh',
   path: '/tasbeeh',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/stats': typeof StatsRoute
   '/tasbeeh': typeof TasbeehRoute
+  '/tree': typeof TreeRoute
   '/azkar/$category': typeof AzkarCategoryRoute
   '/azkar/': typeof AzkarIndexRoute
 }
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/stats': typeof StatsRoute
   '/tasbeeh': typeof TasbeehRoute
+  '/tree': typeof TreeRoute
   '/azkar/$category': typeof AzkarCategoryRoute
   '/azkar': typeof AzkarIndexRoute
 }
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/stats': typeof StatsRoute
   '/tasbeeh': typeof TasbeehRoute
+  '/tree': typeof TreeRoute
   '/azkar/$category': typeof AzkarCategoryRoute
   '/azkar/': typeof AzkarIndexRoute
 }
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/stats'
     | '/tasbeeh'
+    | '/tree'
     | '/azkar/$category'
     | '/azkar/'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/stats'
     | '/tasbeeh'
+    | '/tree'
     | '/azkar/$category'
     | '/azkar'
   id:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/stats'
     | '/tasbeeh'
+    | '/tree'
     | '/azkar/$category'
     | '/azkar/'
   fileRoutesById: FileRoutesById
@@ -208,12 +220,20 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   StatsRoute: typeof StatsRoute
   TasbeehRoute: typeof TasbeehRoute
+  TreeRoute: typeof TreeRoute
   AzkarCategoryRoute: typeof AzkarCategoryRoute
   AzkarIndexRoute: typeof AzkarIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tree': {
+      id: '/tree'
+      path: '/tree'
+      fullPath: '/tree'
+      preLoaderRoute: typeof TreeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tasbeeh': {
       id: '/tasbeeh'
       path: '/tasbeeh'
@@ -328,6 +348,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   StatsRoute: StatsRoute,
   TasbeehRoute: TasbeehRoute,
+  TreeRoute: TreeRoute,
   AzkarCategoryRoute: AzkarCategoryRoute,
   AzkarIndexRoute: AzkarIndexRoute,
 }
