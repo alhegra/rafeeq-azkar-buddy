@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: "bun"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -42,7 +43,10 @@ jobs:
         run: yes | sdkmanager --licenses >/dev/null 2>&1 || true
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: |
+          node --version
+          bun --version
+          bun install --frozen-lockfile
 
       - name: Build web bundle (SPA for WebView)
         run: bun run build:mobile
@@ -50,13 +54,13 @@ jobs:
       - name: Add Android platform (if missing)
         run: |
           if [ ! -d "android" ]; then
-            bunx cap add android
+            npx cap add android
           else
             echo "android/ already present"
           fi
 
       - name: Copy web assets + sync plugins
-        run: bunx cap sync android
+        run: npx cap sync android
 
       - name: Make gradlew executable
         working-directory: android
