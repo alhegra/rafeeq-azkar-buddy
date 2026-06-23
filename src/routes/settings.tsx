@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useAppStore } from "@/lib/store";
-import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat, Layers } from "lucide-react";
+import { Moon, Sun, Languages, Type, Vibrate, Volume2, Info, Bell, Sunrise, Sunset, Sparkles, Download, Smartphone, Send, Mic, Repeat } from "lucide-react";
 import { requestNotificationPermission } from "@/hooks/use-reminders";
 import { sendTestNotification } from "@/lib/reminders-bridge";
 import { speakArabic, isSpeechSupported } from "@/lib/speech";
