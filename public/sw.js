@@ -79,22 +79,35 @@ function scheduleOne(item) {
   TIMER_MAP.set(item.id, tid);
 }
 
+function withinActiveHours(item) {
+  if (item.fromHour == null || item.toHour == null) return true;
+  const h = new Date().getHours();
+  const from = item.fromHour, to = item.toHour;
+  if (from === to) return true;
+  if (from < to) return h >= from && h < to;
+  // wrap around midnight
+  return h >= from || h < to;
+}
+
 function scheduleAmbient(item) {
-  // item: { id, kind:"ambient", intervalMin, picks:[{text,reference}] }
+  // item: { id, kind:"ambient"|"quick", intervalMin, picks:[{text,speak?,emoji?}], fromHour?, toHour?, voice? }
   const fire = () => {
     const pool = item.picks || [];
-    if (pool.length) {
+    if (pool.length && withinActiveHours(item)) {
       const p = pool[Math.floor(Math.random() * pool.length)];
-      self.registration.showNotification("ذكر لله", {
+      const title = item.kind === "quick" ? ((p.emoji ? p.emoji + " " : "") + "تذكير بذكر الله") : "ذكر لله";
+      const href = "/?say=" + encodeURIComponent(p.speak || p.text) + (item.voice ? "&voice=1" : "");
+      self.registration.showNotification(title, {
         body: p.text,
         icon: "/icon-192.png",
         badge: "/icon-192.png",
-        tag: "ambient-zikr",
+        tag: item.id,
         lang: "ar",
         dir: "rtl",
-        silent: true,
-        renotify: false,
-        data: { href: "/" },
+        silent: false,
+        renotify: true,
+        vibrate: [80, 40, 80],
+        data: { href, speak: p.speak || p.text, voice: !!item.voice },
       });
     }
     const tid = setTimeout(fire, Math.max(1, item.intervalMin) * 60 * 1000);
@@ -108,7 +121,7 @@ async function applySchedule(items) {
   clearAllTimers();
   await saveSchedule(items);
   for (const it of items) {
-    if (it.kind === "ambient") scheduleAmbient(it);
+    if (it.kind === "ambient" || it.kind === "quick") scheduleAmbient(it);
     else scheduleOne(it);
   }
 }
@@ -117,7 +130,7 @@ async function rehydrate() {
   const items = await loadSchedule().catch(() => []);
   clearAllTimers();
   for (const it of items) {
-    if (it.kind === "ambient") scheduleAmbient(it);
+    if (it.kind === "ambient" || it.kind === "quick") scheduleAmbient(it);
     else scheduleOne(it);
   }
 }
