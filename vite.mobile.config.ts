@@ -5,7 +5,12 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import path from "path";
 
+// Capacitor / Android WebView build. Uses a dedicated `mobile/index.html`
+// shell so the root of the repo has no `index.html` (which would otherwise
+// be picked up by the TanStack Start web build and served as a static
+// asset, breaking the published site).
 export default defineConfig({
+  root: path.resolve(__dirname, "mobile"),
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: true }),
     react(),
@@ -17,8 +22,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  publicDir: path.resolve(__dirname, "public"),
   build: {
-    outDir: "dist",
+    outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
   },
 });
