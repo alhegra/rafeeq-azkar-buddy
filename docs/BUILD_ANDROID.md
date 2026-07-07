@@ -1,42 +1,47 @@
-# بناء تطبيق Android (APK) من GitHub Actions
+# بناء تطبيق أندرويد (APK)
 
-يحتوي هذا المشروع على ورك‌فلو جاهز يبني ملف APK تلقائياً.
+## 1) عبر GitHub Actions (الأسهل — لا تحتاج بيئة محلية)
 
-## كيف تُولّد APK
+1. اربط المشروع بمستودع GitHub من Lovable (زر **+** ← GitHub).
+2. في المستودع افتح **Actions** → اختر **Build Android APK** → **Run workflow**.
+   - أو ادفع وسمًا (tag) يبدأ بـ `v` (مثل `v1.0.0`) لبناء تلقائي وإرفاق الـ APK بالإصدار.
+3. عند اكتمال البناء نزّل ملف `rafeeq-azkar-debug-apk` من قسم **Artifacts**.
+4. انقل ملف `rafeeq-azkar-debug.apk` إلى هاتف أندرويد وثبّته (فعّل "تثبيت من مصادر غير معروفة").
 
-### الطريقة 1 — يدوي من GitHub
-1. ادفع المشروع إلى GitHub.
-2. افتح صفحة المستودع → تبويب **Actions**.
-3. اختر **Build Android APK** من القائمة الجانبية.
-4. اضغط **Run workflow** → فرع `main` → **Run workflow**.
-5. انتظر ~٨–١٢ دقيقة. عند انتهاء البناء، حمّل ملف APK من قسم **Artifacts** أسفل الصفحة.
+الـ workflow يقوم بـ:
+- بناء واجهة الويب عبر `vite.mobile.config.ts` إلى مجلد `dist/`.
+- تشغيل `cap add android` (إن لم يكن موجودًا).
+- تنفيذ `scripts/patch-android.mjs` لحقن ملفات الإضافة الأصلية `ZikrOverlayPlugin` و`ZikrOverlayService` وتحديث `AndroidManifest.xml` و`MainActivity.java`.
+- تنفيذ `cap sync android` وبناء `assembleDebug`.
 
-### الطريقة 2 — تلقائي عند إصدار نسخة
-ادفع وسماً يبدأ بحرف `v` (مثل `v1.0.0`) — سيُنشئ Actions الـ APK ويرفعه تلقائياً
-على صفحة Releases في المستودع:
+## 2) بناء محلي
+
+المتطلبات:
+- Node.js 22 و Bun آخر إصدار.
+- JDK Temurin 21.
+- Android SDK (platform-tools, platforms;android-34, build-tools;34.0.0).
+
+الخطوات:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-## بناء محلي (اختياري)
-يحتاج Node 20+ وJava 21 وAndroid SDK مع `ANDROID_HOME` معدّاً:
-
-```bash
-npm ci
-npm install @capacitor/core @capacitor/cli @capacitor/android
-npm run build:mobile
-npx cap add android
-npx cap sync android
+bun install
+bunx vite build --config vite.mobile.config.ts
+bunx cap add android            # مرة واحدة فقط
+node scripts/patch-android.mjs
+bunx cap sync android
 cd android && ./gradlew assembleDebug
-# الناتج: android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## ملاحظات
-- الـ APK المُولَّد هو إصدار **Debug** — قابل للتثبيت مباشرة على هاتفك للتجربة.
-- لإصدار **Release** موقَّع للنشر على Google Play تحتاج إلى توليد keystore وإضافته
-  كسرّ في Actions (`ANDROID_KEYSTORE_BASE64` و`ANDROID_KEY_ALIAS` و`ANDROID_KEY_PASSWORD`)
-  ثم تعديل خطوة Gradle لاستخدام `assembleRelease` + التوقيع.
-- إشعارات الخلفية تعمل داخل APK كتطبيق محلي عبر `@capacitor/local-notifications`
-  (يمكن إضافته لاحقاً للحصول على إشعارات حتى بدون اتصال أو متصفح).
+الـ APK: `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+## 3) الإذن العائم (Display over other apps)
+
+عند أول تشغيل يطلب التطبيق فتح إعدادات النظام لمنح إذن "الظهور فوق التطبيقات الأخرى". فعّله يدويًا ثم عد إلى التطبيق.
+
+## ملفات مهمة
+
+- `capacitor.config.ts` — إعدادات Capacitor (`appId`, `webDir=dist`).
+- `vite.mobile.config.ts` — بناء ويب مخصص لـ Android WebView (يستخدم `mobile/index.html`).
+- `native/android/*.java` — الإضافة الأصلية للنافذة العائمة.
+- `scripts/patch-android.mjs` — يحقن الملفات الأصلية بعد `cap add android`.
+- `.github/workflows/android.yml` — بناء تلقائي على GitHub.
